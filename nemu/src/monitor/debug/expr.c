@@ -144,6 +144,7 @@ bool checkParentheses(int p, int q,bool *success) {
       }
     }
   }
+    puts("return");
   return false;
 }
 
