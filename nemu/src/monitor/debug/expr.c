@@ -27,7 +27,7 @@ static struct rule {
 	{"-", '-'},					// sub
 	{"\\*", '*'},					// multi
 	{"/", '/'},					// devide
-//	{"(", '('},					// left
+	{"(", '('},					// left
   {"[1-9][0-9]*",NUM},
 	{")", ')'},					// right 
 	{"==", EQ}						// equal
