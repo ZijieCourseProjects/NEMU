@@ -107,6 +107,7 @@ static bool make_token(char *e) {
         case NUM:
             tokens[index].type=rules[i].token_type;
             strncpy(tokens[index++].str, substr_start, substr_len);
+            printf("%s",tokens[index-1].str);
             break;
         default:
           panic("please implement me");
