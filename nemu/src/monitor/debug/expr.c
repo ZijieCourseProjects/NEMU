@@ -121,7 +121,6 @@ int index=0;
 		}
 	}
     tokens[index].type=0;
-    puts("return");
 	return true;
 }
 
@@ -145,7 +144,7 @@ bool checkParentheses(int p, int q,bool *success) {
       }
     }
   }
-  return 2;
+  return false;
 }
 
 uint32_t strNum(char * str){
@@ -197,7 +196,7 @@ uint32_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
-    return eval(0,(sizeof(tokens)/sizeof(Token))-1,success);
+    return eval(0,2,success);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
 	return 0;
