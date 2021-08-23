@@ -197,6 +197,7 @@ uint32_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
+  printf ("%d",(int)(sizeof(tokens)/sizeof(Token)));
     return eval(0,sizeof(tokens)/sizeof(Token),success);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
