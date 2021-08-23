@@ -80,6 +80,11 @@ static int cmd_scan(char *args){
     return 0;
 }
 
+static int cmd_p(char *args){
+    bool success;
+    printf("%d\n",expr(args, &success));
+    return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -92,7 +97,8 @@ static struct {
     {"q", "Exit NEMU", cmd_q},
     {"si", "Step continue the program", cmd_si},
     {"info", "Print some value", cmd_info},
-    {"x", "scan the memory", cmd_scan}
+    {"x", "scan the memory", cmd_scan},
+    {"p","print something",cmd_p}
     /* TODO: Add more commands */
 
 };
