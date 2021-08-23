@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ
+	NOTYPE = 256, EQ, NUM
 
 	/* TODO: Add more token types */
 
@@ -24,6 +24,12 @@ static struct rule {
 
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
+	{"-", '-'},					// sub
+	{"\\*", '*'},					// multi
+	{"/", '/'},					// devide
+	{"(", '/'},					// left
+  {"[1-9][0-9]*",NUM},
+	{")", '/'},					// right 
 	{"==", EQ}						// equal
 };
 
@@ -57,32 +63,53 @@ Token tokens[32];
 int nr_token;
 
 static bool make_token(char *e) {
-	int position = 0;
-	int i;
-	regmatch_t pmatch;
-	
-	nr_token = 0;
+  int position = 0;
+  int i;
+  regmatch_t pmatch;
 
-	while(e[position] != '\0') {
-		/* Try all rules one by one. */
-		for(i = 0; i < NR_REGEX; i ++) {
-			if(regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
-				char *substr_start = e + position;
-				int substr_len = pmatch.rm_eo;
+  nr_token = 0;
 
-				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
-				position += substr_len;
+  while (e[position] != '\0') {
+    /* Try all rules one by one. */
+    for (i = 0; i < NR_REGEX; i++) {
+      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 &&
+          pmatch.rm_so == 0) {
+        char *substr_start = e + position;
+        int substr_len = pmatch.rm_eo;
 
-				/* TODO: Now a new token is recognized with rules[i]. Add codes
-				 * to record the token in the array `tokens'. For certain types
-				 * of tokens, some extra actions should be performed.
-				 */
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i,
+            rules[i].regex, position, substr_len, substr_len, substr_start);
+        position += substr_len;
 
-				switch(rules[i].token_type) {
-					default: panic("please implement me");
-				}
+        /* TODO: Now a new token is recognized with rules[i]. Add codes
+         * to record the token in the array `tokens'. For certain types
+         * of tokens, some extra actions should be performed.
+         */
+        unsigned short index = 0;
+        switch (rules[i].token_type) {
+        case '+':
+          tokens[index++].type = rules[i].token_type;
+          break;
+        case '-':
+          tokens[index++].type = rules[i].token_type;
+          break;
+        case '*':
+            tokens[index++].type=rules[i].token_type;
+            break;
+        case '/':
+                tokens[index++].type=rules[i].token_type;
+                break;
+        case EQ:
+                tokens[index++].type=rules[i].token_type;
+                break;
+        case NUM:
+                tokens[index].type=rules[i].token_type;
+                strncpy(tokens[index++].str, substr_start, substr_len);
+        default:
+          panic("please implement me");
+        }
 
-				break;
+                                break;
 			}
 		}
 
@@ -92,7 +119,7 @@ static bool make_token(char *e) {
 		}
 	}
 
-	return true; 
+	return true;
 }
 
 uint32_t expr(char *e, bool *success) {

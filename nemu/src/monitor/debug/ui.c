@@ -44,7 +44,7 @@ static int cmd_si(char* args){
     int i;
     for(i=0;i<strlen(args);i++){
         if(args[i]>'9' || args[i]<'0'){
-        printf("valid steps!!");
+        printf("valid steps!!\n");
         return 0;
         }
         steps=steps*10+(args[i]-48);
@@ -74,7 +74,7 @@ static int cmd_scan(char *args){
     uint32_t step;
     sscanf(args,"%d 0x%x",&length,&addrToScan);
     if(length <=0)
-        printf("invalid length");
+        printf("invalid length\n");
     for(step=0;step<length;step++)
         printf("[%08x]\n",swaddr_read(addrToScan+4*step, 4));
     return 0;
