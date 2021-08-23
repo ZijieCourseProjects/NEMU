@@ -61,15 +61,15 @@ typedef struct token {
 
 Token tokens[32];
 int nr_token;
-
+int tokenCount=0;
 static bool make_token(char *e) {
+
   int position = 0;
   int i;
   regmatch_t pmatch;
 
   nr_token = 0;
 
-int index=0;
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i++) {
@@ -86,27 +86,27 @@ int index=0;
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        if(index>31)
+        if(tokenCount>31)
             assert(0);
         switch (rules[i].token_type) {
         case '+':
-          tokens[index++].type = rules[i].token_type;
+          tokens[tokenCount++].type = rules[i].token_type;
           break;
         case '-':
-          tokens[index++].type = rules[i].token_type;
+          tokens[tokenCount++].type = rules[i].token_type;
           break;
         case '*':
-            tokens[index++].type=rules[i].token_type;
+            tokens[tokenCount++].type=rules[i].token_type;
             break;
         case '/':
-            tokens[index++].type=rules[i].token_type;
+            tokens[tokenCount++].type=rules[i].token_type;
             break;
         case EQ:
-            tokens[index++].type=rules[i].token_type;
+            tokens[tokenCount++].type=rules[i].token_type;
             break;
         case NUM:
-            tokens[index].type=rules[i].token_type;
-            strncpy(tokens[index++].str, substr_start, substr_len);
+            tokens[tokenCount].type=rules[i].token_type;
+            strncpy(tokens[tokenCount++].str, substr_start, substr_len);
             break;
         default:
           panic("please implement me");
@@ -120,7 +120,7 @@ int index=0;
 			return false;
 		}
 	}
-    tokens[index].type=0;
+    tokens[tokenCount].type=0;
 	return true;
 }
 
@@ -197,7 +197,7 @@ uint32_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
-    return eval(0,2,success);
+    return eval(0,tokenCount-1,success);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
 	return 0;
