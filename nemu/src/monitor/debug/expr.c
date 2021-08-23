@@ -71,6 +71,7 @@ static bool make_token(char *e) {
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
+    int index=0;
     for (i = 0; i < NR_REGEX; i++) {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 &&
           pmatch.rm_so == 0) {
@@ -85,7 +86,8 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        unsigned short index = 0;
+        if(index>31)
+            assert(0);
         switch (rules[i].token_type) {
         case '+':
           tokens[index++].type = rules[i].token_type;
@@ -97,19 +99,20 @@ static bool make_token(char *e) {
             tokens[index++].type=rules[i].token_type;
             break;
         case '/':
-                tokens[index++].type=rules[i].token_type;
-                break;
+            tokens[index++].type=rules[i].token_type;
+            break;
         case EQ:
-                tokens[index++].type=rules[i].token_type;
-                break;
+            tokens[index++].type=rules[i].token_type;
+            break;
         case NUM:
-                tokens[index].type=rules[i].token_type;
-                strncpy(tokens[index++].str, substr_start, substr_len);
+            tokens[index].type=rules[i].token_type;
+            strncpy(tokens[index++].str, substr_start, substr_len);
+            break;
         default:
           panic("please implement me");
         }
-
-                                break;
+        tokens[index].type=0;
+        break;
 			}
 		}
 
@@ -120,6 +123,73 @@ static bool make_token(char *e) {
 	}
 
 	return true;
+}
+
+bool checkParentheses(int p, int q,bool *success) {
+  int stk = 0, i = 0;
+  for (i = p; i <= q; i++) {
+    if (tokens[i].type == '(') {
+      stk++;
+    } else if (tokens[i].type == ')') {
+      stk--;
+      if (stk == -1) {
+          *success=false;
+          return 0;
+      }
+      if (stk == 0) {
+        if (tokens[i + 1].type != 0) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
+    }
+  }
+  return 2;
+}
+
+uint32_t strNum(char * str){
+    int num=0;
+    while(str){
+       num=num*10+(*str-'0');
+       str++;
+    }
+    return num;
+}
+uint32_t eval(int p,int q,bool *success){
+    if (p>q){
+        *success =false;
+        return 0;
+    }else if(p==q){
+        return strNum(tokens[p].str);
+    }else if (checkParentheses(p, q,success)== true){
+        return eval(p+1, q-1, success);
+    }else{
+        int i=p;
+        char op=0;
+        for(;i<q;i++){
+           if(tokens[i].type=='+'|| tokens[i].type=='-')
+               op=i;
+        }
+        int val1=eval(p,op-1,success);
+        int val2=eval(op+1,q,success);
+        switch(tokens[(int)op].type){
+            case '+':
+                return val1+val2;
+                break;
+            case '-':
+                return val1-val2;
+                break;
+            case '*':
+                return val1*val2;
+                break;
+            case '/':
+                return val1/val2;
+                break;
+            default:
+                assert(0);
+        }
+    }
 }
 
 uint32_t expr(char *e, bool *success) {
