@@ -48,14 +48,14 @@ static int cmd_si(char* args){
 static int cmd_info(char * args){
     if(*args=='r'){
         printf("Printing the value in the registers\n");
-        printf("eax:%x",cpu.eax);
-        printf("ecx:%x",cpu.ecx);
-        printf("edx:%x",cpu.edx);
-        printf("ebx:%x",cpu.ebx);
-        printf("esp:%x",cpu.esp);
-        printf("ebp:%x",cpu.ebp);
-        printf("esi:%x",cpu.esi);
-        printf("edi:%x",cpu.edi);
+        printf("eax:0x%x\n",cpu.eax);
+        printf("ecx:0x%x\n",cpu.ecx);
+        printf("edx:0x%x\n",cpu.edx);
+        printf("ebx:0x%x\n",cpu.ebx);
+        printf("esp:0x%x\n",cpu.esp);
+        printf("ebp:0x%x\n",cpu.ebp);
+        printf("esi:0x%x\n",cpu.esi);
+        printf("edi:0x%x\n",cpu.edi);
     }
     return 0;
 }
