@@ -36,6 +36,10 @@ static int cmd_q(char *args) {
 	return -1;
 }
 static int cmd_si(char* args){
+    if(args==NULL){
+        cpu_exec(1);
+        return 0;
+    }
     int steps=0;
     int i;
     for(i=0;i<strlen(args);i++){
