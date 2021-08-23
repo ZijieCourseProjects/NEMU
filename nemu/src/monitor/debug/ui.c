@@ -41,8 +41,22 @@ static int cmd_si(char* args){
     for(i=0;i<strlen(args);i++){
         steps=steps*10+(args[i]-48);
     }
-    printf("%d",steps);
     cpu_exec(steps);
+    return 0;
+}
+
+static int cmd_info(char * args){
+    if(*args=='r'){
+        printf("Printing the value in the registers\n");
+        printf("eax:%x",cpu.eax);
+        printf("ecx:%x",cpu.ecx);
+        printf("edx:%x",cpu.edx);
+        printf("ebx:%x",cpu.ebx);
+        printf("esp:%x",cpu.esp);
+        printf("ebp:%x",cpu.ebp);
+        printf("esi:%x",cpu.esi);
+        printf("edi:%x",cpu.edi);
+    }
     return 0;
 }
 
@@ -56,7 +70,8 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
-  {"si","Step continue the program",cmd_si }
+  {"si","Step continue the program",cmd_si },
+  {"info","Print some value",cmd_info}
 	/* TODO: Add more commands */
 
 };
