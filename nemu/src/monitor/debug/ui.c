@@ -60,19 +60,28 @@ static int cmd_info(char * args){
     return 0;
 }
 
+static int cmd_scan(char *args){
+    swaddr_t addrToScan;
+    uint32_t length;
+    sscanf(args,"%d 0x%x",&length,&addrToScan);
+    printf("[%x]",swaddr_read(addrToScan, length));
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
 	char *name;
 	char *description;
 	int (*handler) (char *);
-} cmd_table [] = {
-	{ "help", "Display informations about all supported commands", cmd_help },
-	{ "c", "Continue the execution of the program", cmd_c },
-	{ "q", "Exit NEMU", cmd_q },
-  {"si","Step continue the program",cmd_si },
-  {"info","Print some value",cmd_info}
-	/* TODO: Add more commands */
+} cmd_table[] = {
+    {"help", "Display informations about all supported commands", cmd_help},
+    {"c", "Continue the execution of the program", cmd_c},
+    {"q", "Exit NEMU", cmd_q},
+    {"si", "Step continue the program", cmd_si},
+    {"info", "Print some value", cmd_info},
+    {"x", "scan the memory", cmd_scan}
+    /* TODO: Add more commands */
 
 };
 
