@@ -107,7 +107,6 @@ int index=0;
         case NUM:
             tokens[index].type=rules[i].token_type;
             strncpy(tokens[index++].str, substr_start, substr_len);
-            printf("%s\n",tokens[index-1].str);
             break;
         default:
           panic("please implement me");
@@ -198,7 +197,7 @@ uint32_t expr(char *e, bool *success) {
 		return 0;
 	}
   printf ("%d",(int)(sizeof(tokens)/sizeof(Token)));
-    return eval(0,sizeof(tokens)/sizeof(Token),success);
+    return eval(0,(sizeof(tokens)/sizeof(Token))-1,success);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
 	return 0;
