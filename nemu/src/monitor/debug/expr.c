@@ -107,7 +107,7 @@ int index=0;
         case NUM:
             tokens[index].type=rules[i].token_type;
             strncpy(tokens[index++].str, substr_start, substr_len);
-            printf("%s",tokens[index-1].str);
+            printf("%s\n",tokens[index-1].str);
             break;
         default:
           panic("please implement me");
