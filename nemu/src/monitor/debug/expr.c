@@ -169,12 +169,10 @@ uint32_t eval(int p,int q,bool *success){
         for(;i<q;i++){
            if(tokens[i].type=='+'|| tokens[i].type=='-'){
                op=i;
-               printf("%d",op);
            }
         }
         int val1=eval(p,op-1,success);
         int val2=eval(op+1,q,success);
-        printf("%d %d\n",val1,val2);
         switch(tokens[(int)op].type){
             case '+':
                 return val1+val2;
