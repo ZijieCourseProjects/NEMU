@@ -43,6 +43,10 @@ static int cmd_si(char* args){
     int steps=0;
     int i;
     for(i=0;i<strlen(args);i++){
+        if(args[i]>'9' || args[i]<'0'){
+        printf("valid steps!!");
+        return 0;
+        }
         steps=steps*10+(args[i]-48);
     }
     cpu_exec(steps);
