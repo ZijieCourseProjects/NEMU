@@ -149,7 +149,7 @@ bool checkParentheses(int p, int q,bool *success) {
 
 uint32_t strNum(char * str){
     int num=0;
-    while(str){
+    while(*str){
        num=num*10+(*str-'0');
        str++;
     }
