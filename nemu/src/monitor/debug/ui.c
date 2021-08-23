@@ -64,7 +64,8 @@ static int cmd_scan(char *args){
     swaddr_t addrToScan;
     uint32_t length;
     sscanf(args,"%d 0x%x",&length,&addrToScan);
-    printf("[%x]",swaddr_read(addrToScan, length));
+    for(;length!=0;length--)
+        printf("[%x]\n",swaddr_read(addrToScan, 4));
     return 0;
 }
 
