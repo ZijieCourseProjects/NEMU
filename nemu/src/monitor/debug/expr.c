@@ -331,6 +331,7 @@ uint32_t eval(int p, int q, bool *success) {
       return val1||val2;
       break;
     case NOT:
+      printf("%d",val2);
       return !val2;
       break;
     default:
