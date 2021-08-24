@@ -299,7 +299,7 @@ uint32_t eval(int p, int q, bool *success) {
                 i++;
             }while(count);
         }
-        if(tokens[i].type=='*'||tokens[i].type =='/')
+        if((op==0 || tokens[(int)op].type=='*' || tokens[(int)op].type=='/')&& (tokens[i].type=='*'||tokens[i].type =='/'))
             op=i;
         if(tokens[i].type=='+'||tokens[i].type=='-')
             op=i;
