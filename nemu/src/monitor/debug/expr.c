@@ -306,6 +306,8 @@ uint32_t eval(int p, int q, bool *success) {
         if(tokens[i].type==NOT||tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR||tokens[i].type==DEREF)
             op=i;
        }
+    if(p+1==q&&tokens[p].type==NEG)
+        op=p;
     int val1=0;
     if(p!=op)
         val1=eval(p, op - 1, success);
