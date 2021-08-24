@@ -24,7 +24,7 @@ static struct rule {
 
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
-	{"-", '-'},					// sub
+	//{"-", '-'},					// sub
 	{"\\*", '*'},					// multi
 	{"/", '/'},					// devide
 	{"\\(", '('},					// left
