@@ -179,6 +179,7 @@ void replaceToken() {
   for (; i < tokenCount; i++) {
       if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type!=NUM&&tokens[i-1].type!=HEXNUM))){
         uint32_t data=swaddr_read(strNum(tokens[i+1].str, tokens[i+1].type), 4);
+        Log("%x",data);
         sprintf(tokens[i+1].str,"%x",data);
       }
     if (tokens[i].type == REG) {
