@@ -96,23 +96,13 @@ tokenCount=0;
             assert(0);
         switch (rules[i].token_type) {
         case '+':
-          tokens[tokenCount++].type = rules[i].token_type;
-          break;
-        //case '-':
-          //tokens[tokenCount++].type = rules[i].token_type;
-          //break;
-        case '*':
-            tokens[tokenCount++].type=rules[i].token_type;
-            break;
         case '(':
-            tokens[tokenCount++].type=rules[i].token_type;
-            break;
         case ')':
-            tokens[tokenCount++].type=rules[i].token_type;
-            break;
+        case AND:
+        case OR:
+        case NOT:
+        case NEQ:
         case '/':
-            tokens[tokenCount++].type=rules[i].token_type;
-            break;
         case EQ:
             tokens[tokenCount++].type=rules[i].token_type;
             break;
