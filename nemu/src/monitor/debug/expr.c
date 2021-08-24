@@ -305,6 +305,7 @@ uint32_t eval(int p, int q, bool *success) {
        }
     int val1 = eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
+    printf("val1:%d,val2:%d",val1,val2);
     switch (tokens[(int)op].type) {
     case '+':
       return val1 + val2;
@@ -331,7 +332,6 @@ uint32_t eval(int p, int q, bool *success) {
       return val1||val2;
       break;
     case NOT:
-      printf("%d\n",val2);
       return !val2;
       break;
     default:
