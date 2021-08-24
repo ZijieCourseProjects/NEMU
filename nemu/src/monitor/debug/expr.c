@@ -179,13 +179,13 @@ uint32_t eval(int p, int q, bool *success) {
     for (; i < q; i++) {
         if(tokens[i].type=='('){
             int count=0;
-            while(count){
+            do{
                 if(tokens[i].type=='(')
                     count++;
                 else if(tokens[i].type==')')
                     count--;
                 i++;
-            }
+            }while(count);
         }
       if (tokens[i].type == '+' || tokens[i].type == '-') {
         op = i;
