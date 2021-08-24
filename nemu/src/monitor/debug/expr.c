@@ -178,9 +178,9 @@ void replaceToken() {
   int i = 0;
   for (; i < tokenCount; i++) {
       if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type!=NUM&&tokens[i-1].type!=HEXNUM))){
-        uint32_t data=swaddr_read(strNum(tokens[i].str, tokens[i].type), 4);
+        uint32_t data=swaddr_read(strNum(tokens[i+1].str, tokens[i+1].type), 4);
         printf("%d",data);
-        sprintf(tokens[i].str,"%d",data);
+        sprintf(tokens[i+1].str,"%d",data);
       }
     if (tokens[i].type == REG) {
       if (strlen(tokens[i].str) == 4) {
