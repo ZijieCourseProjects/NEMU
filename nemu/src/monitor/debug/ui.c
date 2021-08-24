@@ -82,7 +82,7 @@ static int cmd_scan(char *args){
 
 static int cmd_p(char *args){
     bool success=true;
-    printf("%d\n",expr(args, &success));
+    printf("%x\n",expr(args, &success));
     return 0;
 }
 static int cmd_help(char *args);
