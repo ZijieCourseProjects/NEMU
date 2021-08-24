@@ -189,7 +189,7 @@ uint32_t eval(int p, int q, bool *success) {
         }
       if (tokens[i].type == '+' || tokens[i].type == '-') {
         op = i;
-      } else if ((op == 0 || op == '*' || op == '/') &&
+      } else if ((op == 0 || tokens[(int)op].type == '*' || tokens[(int)op].type == '/') &&
                  (tokens[i].type == '*' || tokens[i].type == '/')) {
         op = i;
       }
