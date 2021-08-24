@@ -179,6 +179,8 @@ uint32_t eval(int p,int q,bool *success){
         for(;i<q;i++){
            if(tokens[i].type=='+'|| tokens[i].type=='-'){
                op=i;
+           }else if(( op==0 || op=='*'|| op=='/')&&(tokens[i].type=='*'||tokens[i].type=='/')){
+                op=i;
            }
         }
         int val1=eval(p,op-1,success);
