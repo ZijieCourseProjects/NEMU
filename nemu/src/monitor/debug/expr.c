@@ -178,8 +178,14 @@ uint32_t eval(int p, int q, bool *success) {
     char op = 0;
     for (; i < q; i++) {
         if(tokens[i].type=='('){
-            while(tokens[i].type!=')')
+            int count=1;
+            while(count){
+                if(tokens[i].type=='(')
+                    count++;
+                else if(tokens[i].type==')')
+                    count--;
                 i++;
+            }
         }
       if (tokens[i].type == '+' || tokens[i].type == '-') {
         op = i;
@@ -188,6 +194,7 @@ uint32_t eval(int p, int q, bool *success) {
         op = i;
       }
     }
+    Log("op is :%c \n",op);
     int val1 = eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
     switch (tokens[(int)op].type) {
