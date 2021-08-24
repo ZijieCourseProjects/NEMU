@@ -337,6 +337,7 @@ uint32_t expr(char *e, bool *success) {
   int i=0;
   for (; i < 32; ++i) {
       tokens[i].type=0;
+      memset(tokens[i].str,0,32);
   }
   return ans;
   /* TODO: Insert codes to evaluate the expression. */
