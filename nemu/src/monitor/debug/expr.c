@@ -185,7 +185,7 @@ uint32_t strNum(char * str,int type){
 void replaceToken() {
   int i = 0;
   for (; i < tokenCount; i++) {
-      if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type==NUM||tokens[i-1].type==HEXNUM))){
+      if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type!=NUM&&tokens[i-1].type!=HEXNUM))){
         sprintf(tokens[i].str,"%d",swaddr_read(strNum(tokens[i].str, NUM),4));
       }
     if (tokens[i].type == REG) {
