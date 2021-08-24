@@ -342,6 +342,7 @@ uint32_t eval(int p, int q, bool *success) {
       break;
     case NOT:
       return !val2;
+      break;
     default:
       Log("No operation found!");
       assert(0);
