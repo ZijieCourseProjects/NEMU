@@ -178,7 +178,7 @@ uint32_t eval(int p, int q, bool *success) {
     char op = 0;
     for (; i < q; i++) {
         if(tokens[i].type=='('){
-            int count=1;
+            int count=0;
             while(count){
                 if(tokens[i].type=='(')
                     count++;
