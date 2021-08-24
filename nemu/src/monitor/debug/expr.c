@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM,HEXNUM,REG,NEQ,AND,OR,NOT,DEREF
+	NOTYPE = 256, EQ, NUM,HEXNUM,REG,NEQ,AND,OR,NOT,DEREF,NEG
 
 	/* TODO: Add more token types */
 
@@ -179,12 +179,12 @@ void replaceToken() {
   for (; i < tokenCount; i++) {
       if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type!=NUM&&tokens[i-1].type!=HEXNUM))){
         uint32_t data=swaddr_read(strNum(tokens[i+1].str, tokens[i+1].type), 4);
-        Log("%x",data);
         tokens[i].type=DEREF;
         tokens[i+1].type=HEXNUM;
         sprintf(tokens[i+1].str,"%x",data);
-      }
-    if (tokens[i].type == REG) {
+      }else if(tokens[i].type=='-'&&(tokens[i-1].type=='('||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type=='*'||tokens[i-1].type=='/')){
+          tokens[i].type=NEG;
+      }else if (tokens[i].type == REG) {
       if (strlen(tokens[i].str) == 4) {
         switch (tokens[i].str[2]) {
         case 'A':
@@ -337,6 +337,9 @@ uint32_t eval(int p, int q, bool *success) {
       break;
     case NOT:
       return !val2;
+      break;
+    case NEG:
+      return -val2;
       break;
     case DEREF:
     default:
