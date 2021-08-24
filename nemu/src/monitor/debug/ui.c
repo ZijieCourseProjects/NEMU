@@ -82,7 +82,8 @@ static int cmd_scan(char *args){
 
 static int cmd_p(char *args){
     bool success=true;
-    printf("%x\n",expr(args, &success));
+    uint32_t expression=expr(args, &success);
+    printf("DEC:%d HEX:%x",expression,expression);
     return 0;
 }
 static int cmd_help(char *args);
