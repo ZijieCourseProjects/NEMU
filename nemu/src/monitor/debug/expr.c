@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM,NEGNUM
+	NOTYPE = 256, EQ, NUM,HEXNUM
 
 	/* TODO: Add more token types */
 
@@ -28,8 +28,8 @@ static struct rule {
 	{"\\*", '*'},					// multi
 	{"/", '/'},					// devide
 	{"\\(", '('},					// left
-  {"[1-9][0-9]*",NUM},
-  {"(-)+[1-9][0-9]*",NEGNUM},
+  {"(-)*[1-9][0-9]*",NUM},
+  {"(-)*0[xX][0-9a-fA-F]+",HEXNUM},
 	{"\\)", ')'},					// right 
 	{"==", EQ}						// equal
 };
@@ -112,7 +112,7 @@ tokenCount=0;
             tokens[tokenCount++].type=rules[i].token_type;
             break;
         case NUM:
-        case NEGNUM:
+        case HEXNUM:
             tokens[tokenCount].type=rules[i].token_type;
             strncpy(tokens[tokenCount++].str, substr_start, substr_len);
             break;
@@ -155,31 +155,38 @@ bool checkParentheses(int p, int q,bool *success) {
   return false;
 }
 
-uint32_t strNum(char *str) {
-    printf("the string is:%s\n",str);
-  int num = 0;
-  bool neg=false;
-  if (*str=='-'){
-      str++;
-      neg=true;
-  }
-  while (*str) {
-    num = num * 10 + (*str - '0');
-    str++;
-  }
-  if(neg){
-      num=-num;
-  }
-  return num;
+//uint32_t strNum(char *str) {
+//  int num = 0;
+//  bool neg=false;
+//  if (*str=='-'){
+//      str++;
+//      neg=true;
+//  }
+//  while (*str) {
+//    num = num * 10 + (*str - '0');
+//    str++;
+//  }
+//  if(neg){
+//      num=-num;
+//  }
+//  return num;
+//}
+uint32_t strNum(char * str,int type){
+    int ret;
+    if(type==HEXNUM)
+        sscanf(str,"%x",&ret);
+    if(type==NUM)
+        sscanf(str,"%x",&ret);
+    return ret;
 }
 uint32_t eval(int p, int q, bool *success) {
   if (p > q) {
     *success = false;
     return 0;
   } else if (p == q) {
-    return strNum(tokens[p].str);
-  } else if (p+1==q&&tokens[q].type==NEGNUM){
-      return strNum(tokens[p].str)+strNum(tokens[q].str);
+    return strNum(tokens[p].str,tokens[p].type);
+  } else if (p+1==q&&(tokens[q].type==NUM||tokens[q].type==HEXNUM)){
+      return strNum(tokens[p].str,tokens[p].type)+strNum(tokens[q].str,tokens[p].type);
 
   }else if (checkParentheses(p, q, success) == true) {
     return eval(p + 1, q - 1, success);
@@ -210,7 +217,6 @@ uint32_t eval(int p, int q, bool *success) {
     }
     int val1 = eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
-    Log("val1 is :%d val 2 is :%d op is :%c \n",val1,val2,tokens[(int)op].type);
     switch (tokens[(int)op].type) {
     case '+':
       return val1 + val2;
