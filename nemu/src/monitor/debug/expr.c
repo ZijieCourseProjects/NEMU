@@ -310,7 +310,7 @@ uint32_t eval(int p, int q, bool *success) {
             op=i;
         if(tokens[i].type=='+'||tokens[i].type=='-')
             op=i;
-        if(tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR)
+        if(tokens[i].type==NOT||tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR)
             op=i;
        }
     int val1 = eval(p, op - 1, success);
