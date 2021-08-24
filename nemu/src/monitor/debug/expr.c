@@ -98,6 +98,11 @@ tokenCount=0;
         case '*':
             tokens[tokenCount++].type=rules[i].token_type;
             break;
+        case '(':
+            tokens[tokenCount++].type=rules[i].token_type;
+            break;
+        case ')':
+            tokens[tokenCount++].type=rules[i].token_type;
         case '/':
             tokens[tokenCount++].type=rules[i].token_type;
             break;
