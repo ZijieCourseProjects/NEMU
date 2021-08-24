@@ -144,10 +144,10 @@ bool checkParentheses(int p, int q,bool *success) {
           return 0;
       }
       if (stk == 0) {
-        if (i!= q) {
-          return 0;
-        } else {
+        if (tokens[p].type=='(' && i== q) {
           return 1;
+        }else{
+            return 0;
         }
       }
     }
