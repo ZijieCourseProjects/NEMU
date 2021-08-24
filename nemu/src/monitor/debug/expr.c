@@ -63,7 +63,7 @@ Token tokens[32];
 int nr_token;
 int tokenCount=0;
 static bool make_token(char *e) {
-
+tokenCount=0;
   int position = 0;
   int i;
   regmatch_t pmatch;
