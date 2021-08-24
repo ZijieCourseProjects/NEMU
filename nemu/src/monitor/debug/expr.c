@@ -126,6 +126,7 @@ tokenCount=0;
 			return false;
 		}
 	}
+  tokenCount--;
 	return true;
 }
 
@@ -141,7 +142,7 @@ bool checkParentheses(int p, int q,bool *success) {
           return 0;
       }
       if (stk == 0) {
-        if (i!=q) {
+        if (i!= q) {
           return 0;
         } else {
           return 1;
