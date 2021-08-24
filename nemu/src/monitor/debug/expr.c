@@ -175,7 +175,7 @@ uint32_t strNum(char * str,int type){
     if(type==HEXNUM)
         sscanf(str,"%x",&ret);
     if(type==NUM)
-        sscanf(str,"%x",&ret);
+        sscanf(str,"%d",&ret);
     return ret;
 }
 void replaceReg() {
