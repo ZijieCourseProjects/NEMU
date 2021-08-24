@@ -128,7 +128,6 @@ tokenCount=0;
 			return false;
 		}
 	}
-  tokenCount--;
 	return true;
 }
 
@@ -334,7 +333,7 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  int ans=eval(0, tokenCount, success);
+  int ans=eval(0, tokenCount-1, success);
   int i=0;
   for (; i < 32; ++i) {
       tokens[i].type=0;
