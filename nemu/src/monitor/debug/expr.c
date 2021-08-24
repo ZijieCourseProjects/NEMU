@@ -126,7 +126,6 @@ tokenCount=0;
 			return false;
 		}
 	}
-    tokens[tokenCount].type=0;
 	return true;
 }
 
@@ -142,7 +141,7 @@ bool checkParentheses(int p, int q,bool *success) {
           return 0;
       }
       if (stk == 0) {
-        if (tokens[i + 1].type != 0) {
+        if (i!=q) {
           return 0;
         } else {
           return 1;
@@ -203,7 +202,7 @@ uint32_t expr(char *e, bool *success) {
 		*success = false;
 		return 0;
 	}
-    return eval(0,tokenCount-1,success);
+    return eval(0,tokenCount,success);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
 	return 0;
