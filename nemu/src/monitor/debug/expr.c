@@ -172,6 +172,7 @@ uint32_t eval(int p,int q,bool *success){
     }else{
         if (*success== false){
             return 0;
+            Log("Invalid operation");
         }
         int i=p;
         char op=0;
