@@ -99,6 +99,7 @@ tokenCount=0;
         case '(':
         case ')':
         case '-':
+        case '*':
         case AND:
         case OR:
         case NOT:
@@ -334,7 +335,6 @@ uint32_t eval(int p, int q, bool *success) {
       return !val2;
       break;
     default:
-      Log("No operation found!");
       return val2;
     }
   }
