@@ -170,6 +170,9 @@ uint32_t eval(int p,int q,bool *success){
     }else if (checkParentheses(p, q,success)== true){
         return eval(p+1, q-1, success);
     }else{
+        if (*success== false){
+            return 0;
+        }
         int i=p;
         char op=0;
         for(;i<q;i++){
