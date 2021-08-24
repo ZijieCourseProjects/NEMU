@@ -338,6 +338,7 @@ uint32_t eval(int p, int q, bool *success) {
     case NOT:
       return !val2;
       break;
+    case DEREF:
     default:
       return val2;
     }
