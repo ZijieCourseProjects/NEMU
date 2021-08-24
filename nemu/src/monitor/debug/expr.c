@@ -103,6 +103,7 @@ tokenCount=0;
             break;
         case ')':
             tokens[tokenCount++].type=rules[i].token_type;
+            break;
         case '/':
             tokens[tokenCount++].type=rules[i].token_type;
             break;
