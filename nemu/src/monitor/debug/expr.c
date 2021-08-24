@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM,HEXNUM,REG
+	NOTYPE = 256, EQ, NUM,HEXNUM,REG,NEQ,AND,OR,NOT,DEREF
 
 	/* TODO: Add more token types */
 
@@ -32,7 +32,11 @@ static struct rule {
   {"(-)*[1-9][0-9]*",NUM}, //decimal number
   {"(-)*0[xX][0-9a-fA-F]+",HEXNUM},
 	{"\\)", ')'},					// right 
-	{"==", EQ}						// equal
+  {"!=",NEQ},
+  {"&&",AND},
+  {"||",OR},
+	{"==", EQ},						// equal
+  {"!",NOT}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -169,7 +173,7 @@ bool checkParentheses(int p, int q,bool *success) {
 //      num=-num;
 //  }
 //  return num;
-//}
+//
 uint32_t strNum(char * str,int type){
     int ret;
     if(type==HEXNUM)
@@ -178,9 +182,12 @@ uint32_t strNum(char * str,int type){
         sscanf(str,"%d",&ret);
     return ret;
 }
-void replaceReg() {
+void replaceToken() {
   int i = 0;
   for (; i < tokenCount; i++) {
+      if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type==NUM||tokens[i-1].type==HEXNUM))){
+        sprintf(tokens[i].str,"%d",swaddr_read(strNum(tokens[i].str, NUM),4));
+      }
     if (tokens[i].type == REG) {
       if (strlen(tokens[i].str) == 4) {
         switch (tokens[i].str[2]) {
@@ -270,7 +277,7 @@ void replaceReg() {
   }
 }
 uint32_t eval(int p, int q, bool *success) {
-    replaceReg();
+    replaceToken();
   if (p > q) {
     *success = false;
     return 0;
@@ -299,13 +306,13 @@ uint32_t eval(int p, int q, bool *success) {
                 i++;
             }while(count);
         }
-      if (tokens[i].type == '+' || tokens[i].type == '-') {
-        op = i;
-      } else if ((op == 0 || tokens[(int)op].type == '*' || tokens[(int)op].type == '/') &&
-                 (tokens[i].type == '*' || tokens[i].type == '/')) {
-        op = i;
-      }
-    }
+        if(tokens[i].type=='*'||tokens[i].type =='/')
+            op=i;
+        if(tokens[i].type=='+'||tokens[i].type=='-')
+            op=i;
+        if(tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR)
+            op=i;
+       }
     int val1 = eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
     switch (tokens[(int)op].type) {
@@ -321,6 +328,20 @@ uint32_t eval(int p, int q, bool *success) {
     case '/':
       return val1 / val2;
       break;
+    case EQ:
+      return val1==val2;
+      break;
+    case NEQ:
+      return val1!=val2;
+      break;
+    case AND:
+      return val1&&val2;
+      break;
+    case OR:
+      return val1||val2;
+      break;
+    case NOT:
+      return !val2;
     default:
       Log("No operation found!");
       assert(0);
@@ -333,6 +354,7 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  
   int ans=eval(0, tokenCount-1, success);
   int i=0;
   for (; i < 32; ++i) {
