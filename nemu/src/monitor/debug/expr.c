@@ -194,7 +194,7 @@ uint32_t eval(int p, int q, bool *success) {
         op = i;
       }
     }
-    Log("op is :%c \n",op);
+    Log("op is :%c \n",tokens[(int)op].type);
     int val1 = eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
     switch (tokens[(int)op].type) {
