@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM,HEXNUM
+	NOTYPE = 256, EQ, NUM,HEXNUM,REG
 
 	/* TODO: Add more token types */
 
@@ -28,7 +28,8 @@ static struct rule {
 	{"\\*", '*'},					// multi
 	{"/", '/'},					// devide
 	{"\\(", '('},					// left
-  {"(-)*[1-9][0-9]*",NUM},
+  {"\\$[a-zA-Z]{2,3}",REG}, //register
+  {"(-)*[1-9][0-9]*",NUM}, //decimal number
   {"(-)*0[xX][0-9a-fA-F]+",HEXNUM},
 	{"\\)", ')'},					// right 
 	{"==", EQ}						// equal
@@ -116,8 +117,6 @@ tokenCount=0;
             tokens[tokenCount].type=rules[i].token_type;
             strncpy(tokens[tokenCount++].str, substr_start, substr_len);
             break;
-        default:
-          panic("please implement me");
         }
         break;
 			}
