@@ -303,9 +303,10 @@ uint32_t eval(int p, int q, bool *success) {
         if(tokens[i].type==NOT||tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR)
             op=i;
        }
-    int val1 = eval(p, op - 1, success);
+    int val1=0;
+    if(p!=op)
+        eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
-    printf("val1:%d,val2:%d",val1,val2);
     switch (tokens[(int)op].type) {
     case '+':
       return val1 + val2;
