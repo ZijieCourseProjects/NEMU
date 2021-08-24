@@ -177,6 +177,10 @@ uint32_t eval(int p, int q, bool *success) {
     int i = p;
     char op = 0;
     for (; i < q; i++) {
+        if(tokens[i].type=='('){
+            while(tokens[i].type!=')')
+                i++;
+        }
       if (tokens[i].type == '+' || tokens[i].type == '-') {
         op = i;
       } else if ((op == 0 || op == '*' || op == '/') &&
