@@ -169,7 +169,6 @@ uint32_t strNum(char *str) {
   if(neg){
       num=-num;
   }
-  printf("%d",num);
   return num;
 }
 uint32_t eval(int p, int q, bool *success) {
