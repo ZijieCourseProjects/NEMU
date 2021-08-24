@@ -112,6 +112,7 @@ tokenCount=0;
             tokens[tokenCount++].type=rules[i].token_type;
             break;
         case NUM:
+        case NEGNUM:
             tokens[tokenCount].type=rules[i].token_type;
             strncpy(tokens[tokenCount++].str, substr_start, substr_len);
             break;
