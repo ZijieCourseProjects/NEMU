@@ -214,7 +214,6 @@ void replaceReg() {
             sprintf(tokens[i].str, "%d", cpu.gpr[6]._32);
           break;
         }
-        tokens[i].type = NUM;
       } else if (strlen(tokens[i].str) == 3){
         switch (tokens[i].str[1]) {
         case 'A':
