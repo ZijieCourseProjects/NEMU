@@ -29,8 +29,8 @@ static struct rule {
 	{"/", '/'},					// devide
 	{"\\(", '('},					// left
   {"\\$[a-zA-Z]{2,3}",REG}, //register
-  {"(-)*[0-9]+",NUM}, //decimal number
   {"(-)*0[xX][0-9a-fA-F]+",HEXNUM},
+  {"(-)*[0-9]+",NUM}, //decimal number
 	{"\\)", ')'},					// right 
   {"!=",NEQ},
   {"&&",AND},
