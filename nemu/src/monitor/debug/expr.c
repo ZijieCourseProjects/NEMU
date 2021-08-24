@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM
+	NOTYPE = 256, EQ, NUM,NEGNUM
 
 	/* TODO: Add more token types */
 
@@ -29,6 +29,7 @@ static struct rule {
 	{"/", '/'},					// devide
 	{"\\(", '('},					// left
   {"[1-9][0-9]*",NUM},
+  {"(-)+[1-9][0-9]*",NEGNUM},
 	{"\\)", ')'},					// right 
 	{"==", EQ}						// equal
 };
@@ -92,9 +93,9 @@ tokenCount=0;
         case '+':
           tokens[tokenCount++].type = rules[i].token_type;
           break;
-        case '-':
-          tokens[tokenCount++].type = rules[i].token_type;
-          break;
+        //case '-':
+          //tokens[tokenCount++].type = rules[i].token_type;
+          //break;
         case '*':
             tokens[tokenCount++].type=rules[i].token_type;
             break;
@@ -155,9 +156,17 @@ bool checkParentheses(int p, int q,bool *success) {
 
 uint32_t strNum(char *str) {
   int num = 0;
+  bool neg=false;
+  if (*str=='-'){
+      str++;
+      neg=true;
+  }
   while (*str) {
     num = num * 10 + (*str - '0');
     str++;
+  }
+  if(neg){
+      num=-num;
   }
   return num;
 }
@@ -167,7 +176,10 @@ uint32_t eval(int p, int q, bool *success) {
     return 0;
   } else if (p == q) {
     return strNum(tokens[p].str);
-  } else if (checkParentheses(p, q, success) == true) {
+  } else if (p+1==q&&tokens[q].type==NEGNUM){
+      return strNum(tokens[p].str)+strNum(tokens[q].str);
+
+  }else if (checkParentheses(p, q, success) == true) {
     return eval(p + 1, q - 1, success);
   } else {
     if (*success == false) {
