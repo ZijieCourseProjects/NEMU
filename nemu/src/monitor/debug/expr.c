@@ -153,65 +153,66 @@ bool checkParentheses(int p, int q,bool *success) {
   return false;
 }
 
-uint32_t strNum(char * str){
-    int num=0;
-    while(*str){
-       num=num*10+(*str-'0');
-       str++;
-    }
-    return num;
+uint32_t strNum(char *str) {
+  int num = 0;
+  while (*str) {
+    num = num * 10 + (*str - '0');
+    str++;
+  }
+  return num;
 }
-uint32_t eval(int p,int q,bool *success){
-    if (p>q){
-        *success =false;
-        return 0;
-    }else if(p==q){
-        return strNum(tokens[p].str);
-    }else if (checkParentheses(p, q,success)== true){
-        return eval(p+1, q-1, success);
-    }else{
-        if (*success== false){
-            return 0;
-            Log("Invalid operation");
-        }
-        int i=p;
-        char op=0;
-        for(;i<q;i++){
-           if(tokens[i].type=='+'|| tokens[i].type=='-'){
-               op=i;
-           }else if(( op==0 || op=='*'|| op=='/')&&(tokens[i].type=='*'||tokens[i].type=='/')){
-                op=i;
-           }
-        }
-        int val1=eval(p,op-1,success);
-        int val2=eval(op+1,q,success);
-        switch(tokens[(int)op].type){
-            case '+':
-                return val1+val2;
-                break;
-            case '-':
-                return val1-val2;
-                break;
-            case '*':
-                return val1*val2;
-                break;
-            case '/':
-                return val1/val2;
-                break;
-            default:
-                assert(0);
-        }
+uint32_t eval(int p, int q, bool *success) {
+  if (p > q) {
+    *success = false;
+    return 0;
+  } else if (p == q) {
+    return strNum(tokens[p].str);
+  } else if (checkParentheses(p, q, success) == true) {
+    return eval(p + 1, q - 1, success);
+  } else {
+    if (*success == false) {
+      return 0;
+      Log("Invalid operation");
     }
+    int i = p;
+    char op = 0;
+    for (; i < q; i++) {
+      if (tokens[i].type == '+' || tokens[i].type == '-') {
+        op = i;
+      } else if ((op == 0 || op == '*' || op == '/') &&
+                 (tokens[i].type == '*' || tokens[i].type == '/')) {
+        op = i;
+      }
+    }
+    int val1 = eval(p, op - 1, success);
+    int val2 = eval(op + 1, q, success);
+    switch (tokens[(int)op].type) {
+    case '+':
+      return val1 + val2;
+      break;
+    case '-':
+      return val1 - val2;
+      break;
+    case '*':
+      return val1 * val2;
+      break;
+    case '/':
+      return val1 / val2;
+      break;
+    default:
+      Log("No operation found!");
+      assert(0);
+    }
+  }
 }
 
 uint32_t expr(char *e, bool *success) {
-	if(!make_token(e)) {
-		*success = false;
-		return 0;
-	}
-    return eval(0,tokenCount,success);
-	/* TODO: Insert codes to evaluate the expression. */
-	panic("please implement me");
-	return 0;
+  if (!make_token(e)) {
+    *success = false;
+    return 0;
+  }
+  return eval(0, tokenCount, success);
+  /* TODO: Insert codes to evaluate the expression. */
+  panic("please implement me");
+  return 0;
 }
-
