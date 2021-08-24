@@ -236,7 +236,12 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  return eval(0, tokenCount, success);
+  int ans=eval(0, tokenCount, success);
+  int i=0;
+  for (; i < 32; ++i) {
+      tokens[i].type=0;
+  }
+  return ans;
   /* TODO: Insert codes to evaluate the expression. */
   panic("please implement me");
   return 0;
