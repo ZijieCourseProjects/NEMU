@@ -114,6 +114,7 @@ tokenCount=0;
             break;
         case NUM:
         case HEXNUM:
+        case REG:
             tokens[tokenCount].type=rules[i].token_type;
             strncpy(tokens[tokenCount++].str, substr_start, substr_len);
             break;
@@ -178,7 +179,99 @@ uint32_t strNum(char * str,int type){
         sscanf(str,"%x",&ret);
     return ret;
 }
+void replaceReg() {
+  int i = 0;
+  for (; i < tokenCount; i++) {
+    if (tokens[i].type == REG) {
+      if (strlen(tokens[i].str) == 4) {
+        switch (tokens[i].str[2]) {
+        case 'A':
+        case 'a':
+          sprintf(tokens[i].str, "%d", cpu.gpr[0]._32);
+          break;
+        case 'c':
+        case 'C':
+          sprintf(tokens[i].str, "%d", cpu.gpr[1]._32);
+          break;
+        case 'd':
+        case 'D':
+          if (tokens[i].str[3] == 'x' || tokens[i].str[3] == 'X')
+            sprintf(tokens[i].str, "%d", cpu.gpr[2]._32);
+          if (tokens[i].str[3] == 'i' || tokens[i].str[3] == 'I')
+            sprintf(tokens[i].str, "%d", cpu.gpr[7]._32);
+          break;
+        case 'B':
+        case 'b':
+          if (tokens[i].str[3] == 'x' || tokens[i].str[3] == 'X')
+            sprintf(tokens[i].str, "%d", cpu.gpr[3]._32);
+          if (tokens[i].str[3] == 'p' || tokens[i].str[3] == 'P')
+            sprintf(tokens[i].str, "%d", cpu.gpr[5]._32);
+          break;
+        case 'S':
+        case 's':
+          if (tokens[i].str[3] == 'p' || tokens[i].str[3] == 'P')
+            sprintf(tokens[i].str, "%d", cpu.gpr[4]._32);
+          if (tokens[i].str[3] == 'i' || tokens[i].str[3] == 'I')
+            sprintf(tokens[i].str, "%d", cpu.gpr[6]._32);
+          break;
+        }
+        tokens[i].type = NUM;
+      } else if (strlen(tokens[i].str) == 3)
+        switch (tokens[i].str[1]) {
+        case 'A':
+        case 'a':
+          if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
+            sprintf(tokens[i].str, "%d", cpu.gpr[0]._16);
+           if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+            sprintf(tokens[i].str, "%d", cpu.gpr[0]._8[0]);
+            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+            sprintf(tokens[i].str, "%d", cpu.gpr[0]._8[1]);
+          break;
+        case 'c':
+        case 'C':
+           if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
+            sprintf(tokens[i].str, "%d", cpu.gpr[1]._16);
+           if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+            sprintf(tokens[i].str, "%d", cpu.gpr[1]._8[0]);
+            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+            sprintf(tokens[i].str, "%d", cpu.gpr[1]._8[1]);
+          break;
+        case 'd':
+        case 'D':
+          if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
+            sprintf(tokens[i].str, "%d", cpu.gpr[2]._16);
+          if (tokens[i].str[2] == 'i' || tokens[i].str[2] == 'I')
+            sprintf(tokens[i].str, "%d", cpu.gpr[7]._16);
+            if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+            sprintf(tokens[i].str, "%d", cpu.gpr[2]._8[0]);
+            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+            sprintf(tokens[i].str, "%d", cpu.gpr[2]._8[1]);
+         break;
+        case 'B':
+        case 'b':
+          if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
+            sprintf(tokens[i].str, "%d", cpu.gpr[3]._16);
+          if (tokens[i].str[2] == 'p' || tokens[i].str[2] == 'P')
+            sprintf(tokens[i].str, "%d", cpu.gpr[5]._16);
+             if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+            sprintf(tokens[i].str, "%d", cpu.gpr[3]._8[0]);
+            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+            sprintf(tokens[i].str, "%d", cpu.gpr[3]._8[1]);
+          break;
+        case 'S':
+        case 's':
+          if (tokens[i].str[2] == 'p' || tokens[i].str[2] == 'P')
+            sprintf(tokens[i].str, "%d", cpu.gpr[4]._16);
+          if (tokens[i].str[2] == 'i' || tokens[i].str[2] == 'I')
+            sprintf(tokens[i].str, "%d", cpu.gpr[6]._16);
+          break;
+        }
+        tokens[i].type = NUM;
+    }
+  }
+}
 uint32_t eval(int p, int q, bool *success) {
+    replaceReg();
   if (p > q) {
     *success = false;
     return 0;
