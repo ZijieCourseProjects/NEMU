@@ -98,6 +98,7 @@ tokenCount=0;
         case '+':
         case '(':
         case ')':
+        case '-':
         case AND:
         case OR:
         case NOT:
@@ -273,9 +274,6 @@ uint32_t eval(int p, int q, bool *success) {
     return 0;
   } else if (p == q) {
     return strNum(tokens[p].str,tokens[p].type);
-  } else if (p+1==q&&(tokens[q].type==NUM||tokens[q].type==HEXNUM)){
-      return strNum(tokens[p].str,tokens[p].type)+strNum(tokens[q].str,tokens[p].type);
-
   }else if (checkParentheses(p, q, success) == true) {
     return eval(p + 1, q - 1, success);
   } else {
