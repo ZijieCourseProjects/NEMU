@@ -156,6 +156,7 @@ bool checkParentheses(int p, int q,bool *success) {
 }
 
 uint32_t strNum(char *str) {
+    printf("the string is:%s\n",str);
   int num = 0;
   bool neg=false;
   if (*str=='-'){
