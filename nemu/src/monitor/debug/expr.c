@@ -283,8 +283,8 @@ uint32_t eval(int p, int q, bool *success) {
     return eval(p + 1, q - 1, success);
   } else {
     if (*success == false) {
-      return 0;
       Log("Invalid operation");
+      return 0;
     }
     int i = p;
     char op = 0;
