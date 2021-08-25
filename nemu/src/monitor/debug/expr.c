@@ -305,10 +305,10 @@ uint32_t eval(int p, int q, bool *success) {
             op=i;
         if(tokens[i].type=='+'||tokens[i].type=='-')
             op=i;
-        if(tokens[i].type==NOT||tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR||tokens[i].type==DEREF)
+        if(tokens[i].type==NOT||tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR)
             op=i;
        }
-    if(p+1==q&&tokens[p].type==NEG)
+    if(p+1==q&&(tokens[p].type==NEG||tokens[p].type==DEREF))
         op=p;
     int val1=0;
     if(p!=op)
