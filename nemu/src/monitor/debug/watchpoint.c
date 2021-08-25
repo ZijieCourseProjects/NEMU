@@ -26,9 +26,10 @@ WP* new_wp(char * exp){
     }
     WP * ret=free_;
     memcpy(ret->exp, exp, strlen(exp)+1);
-    ret->next=head;
-    if(head)
+    if(head){
+        ret->next=head;
         head->prev=ret;
+    }
     head =ret;
     free_=free_->next;
     return ret;
