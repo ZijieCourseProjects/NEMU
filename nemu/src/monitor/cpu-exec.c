@@ -81,7 +81,7 @@ void cpu_exec(volatile uint32_t n) {
     while(ptr&&*ptr->exp){
         uint32_t fresh=expr(ptr->exp, &success);
        if(fresh!=ptr->data){
-          printf("Hit Watchpoint at eip:%08x!! the value of %s is now:%d in DEC and %x in HEX\n",cpu.eip,ptr->exp,fresh,fresh); 
+          printf("Hit Watchpoint %d at eip:%08x!! the value of %s is now:%d in DEC and %x in HEX\n",ptr->NO,cpu.eip,ptr->exp,fresh,fresh); 
            nemu_state=STOP;
        } 
        ptr=ptr->next;

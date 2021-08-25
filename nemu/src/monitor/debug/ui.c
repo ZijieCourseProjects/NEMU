@@ -63,6 +63,15 @@ static int cmd_info(char * args){
         printf("ebp:0x%06x\n",cpu.ebp);
         printf("esi:0x%06x\n",cpu.esi);
         printf("edi:0x%06x\n",cpu.edi);
+    }else if(*args=='w'){
+        WP *ptr=head;
+        while(ptr&&*ptr->exp){
+            printf("Watchpoint %d : %s\n",ptr->NO,ptr->exp);
+            ptr=ptr->next;
+        }
+    }else{
+        printf("invalid operation!!\n");
+        return 0;
     }
     return 0;
 }
