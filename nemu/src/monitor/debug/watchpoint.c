@@ -18,6 +18,21 @@ void init_wp_pool() {
 	free_ = wp_pool;
 }
 
+WP* new_wp(){
+    if(free_==NULL){
+        Log("Too much watchpoints");
+        assert(0);
+    }
+    WP * ret=free_;
+    free_=free_->next;
+    return ret;
+}
+
+void free_wp(WP *wp){
+    wp->next=free_;
+    free_=wp;
+    return;
+}
 /* TODO: Implement the functionality of watchpoint */
 
 
