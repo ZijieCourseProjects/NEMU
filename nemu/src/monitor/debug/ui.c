@@ -88,8 +88,13 @@ static int cmd_p(char *args){
 
 static int cmd_wp(char *args){    
     bool success=true;
+    uint32_t data=expr(args,&success);
+    if(!success){
+        printf("expr invalid!!!\n");
+        return 0;
+    }
     WP *newWp=new_wp(args);
-    newWp->data=expr(args,&success);
+    newWp->data=data;
     Log("New watchpoint %s added.The value is:%d in DEC %x in HEX\n",args,newWp->data,newWp->data);
     return 0;
 }
