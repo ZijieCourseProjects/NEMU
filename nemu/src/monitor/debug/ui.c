@@ -66,7 +66,7 @@ static int cmd_info(char * args){
     }else if(*args=='w'){
         WP *ptr=head;
         while(ptr&&*ptr->exp){
-            printf("Watchpoint %d : %s\n",ptr->NO,ptr->exp);
+            printf("Watchpoint %d : %s which value is %d in DEC and %x in HEX\n",ptr->NO,ptr->exp,ptr->data,ptr->data);
             ptr=ptr->next;
         }
     }else{
