@@ -82,9 +82,10 @@ void cpu_exec(volatile uint32_t n) {
        if(fresh!=ptr->data){
           printf("Hit Watchpoint!! the value of %s is now:%d in DEC and %x in HEX\n",ptr->exp,fresh,fresh); 
            nemu_state=STOP;
-           return;
        } 
        ptr=ptr->next;
+       if(nemu_state==STOP)
+           return;
     } 
 
 
