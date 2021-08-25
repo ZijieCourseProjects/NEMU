@@ -77,7 +77,7 @@ void cpu_exec(volatile uint32_t n) {
 		/* TODO: check watchpoints here. */
     WP * ptr=head;
     bool success;
-    while(ptr||ptr->prev){
+    while(ptr&&ptr->prev){
        if(expr(ptr->exp,&success)!=ptr->data){
            Log("watch!!!!");
            nemu_state=STOP;
