@@ -25,13 +25,13 @@ WP* new_wp(char * exp){
         assert(0);
     }
     WP * ret=free_;
+    free_=free_->next;
     memcpy(ret->exp, exp, strlen(exp)+1);
     if(head){
         ret->next=head;
         head->prev=ret;
     }
     head =ret;
-    free_=free_->next;
     return ret;
 }
 
