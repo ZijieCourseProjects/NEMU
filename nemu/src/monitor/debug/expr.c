@@ -134,10 +134,6 @@ bool checkParentheses(int p, int q,bool *success) {
       stk++;
     } else if (tokens[i].type == ')') {
       stk--;
-      if (stk == -1) {
-          *success=false;
-          return 0;
-      }
       if (stk == 0) {
         if (tokens[p].type=='(' && i== q) {
           return 1;
@@ -146,6 +142,10 @@ bool checkParentheses(int p, int q,bool *success) {
         }
       }
     }
+  }
+  if(stk!=0){
+      *success=false;
+      return false;
   }
   return false;
 }
