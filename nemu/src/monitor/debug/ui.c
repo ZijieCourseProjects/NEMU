@@ -87,7 +87,7 @@ static int cmd_p(char *args){
 }
 
 static int cmd_wp(char *args){    
-    bool success;
+    bool success=true;
     new_wp(args)->data=expr(args,&success);
     Log("New watchpoint %s added\n",args);
     return 0;
