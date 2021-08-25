@@ -38,7 +38,11 @@ WP* new_wp(char * exp){
     return ret;
 }
 
-void free_wp(WP *wp){
+void free_wp(int no){
+    WP *wp=&wp_pool[no];
+    if(*wp->exp==0){
+        printf("No watchpoint deleted!\n");
+    }
     if(wp->prev)
         wp->prev->next=wp->next;
     if(wp->next)
@@ -47,6 +51,7 @@ void free_wp(WP *wp){
     memset(wp->exp, 0, 64);
     wp->prev=NULL;
     free_=wp;
+    printf("Watchpoint %d deleted!\n",no);
     return;
 }
 /* TODO: Implement the functionality of watchpoint */

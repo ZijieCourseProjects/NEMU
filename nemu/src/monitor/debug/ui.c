@@ -107,6 +107,12 @@ static int cmd_wp(char *args){
     printf("New watchpoint %d added.The value of %s is:%d in DEC %x in HEX\n",newWp->NO,args,newWp->data,newWp->data);
     return 0;
 }
+static int cmd_d(char *args){
+    uint32_t no;
+    sscanf(args, "%d",&no);
+    free_wp(no);
+    return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -120,6 +126,7 @@ static struct {
     {"si", "Step continue the program", cmd_si},
     {"info", "Print some value", cmd_info},
     {"x", "scan the memory", cmd_scan},
+    {"d","delete a watchpoint",cmd_d},
     {"w","add new watchpoint",cmd_wp},
     {"p","print something",cmd_p}
     /* TODO: Add more commands */
