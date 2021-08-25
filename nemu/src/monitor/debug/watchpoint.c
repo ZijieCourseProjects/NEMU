@@ -30,6 +30,8 @@ WP* new_wp(char * exp){
     if(head){
         ret->next=head;
         head->prev=ret;
+    }else{
+        ret->next=NULL;
     }
     head =ret;
     return ret;
