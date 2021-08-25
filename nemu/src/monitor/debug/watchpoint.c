@@ -44,6 +44,7 @@ void free_wp(int no){
         printf("No watchpoint deleted!\n");
     }
     if(!wp->prev){
+        head=wp->next;
     }else if(!wp->next){
         wp->prev->next=NULL;
     }else{
