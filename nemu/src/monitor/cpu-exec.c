@@ -78,8 +78,9 @@ void cpu_exec(volatile uint32_t n) {
     WP * ptr=head;
     bool success;
     while(ptr&&*ptr->exp){
-       if(expr(ptr->exp,&success)!=ptr->data){
-           Log("watch!!!!");
+        uint32_t fresh=expr(ptr->exp, &success);
+       if(fresh!=ptr->data){
+          printf("Hit Watchpoint!! the value of %s is now:%d in DEC and %x in HEX\n",ptr->exp,fresh,fresh); 
            nemu_state=STOP;
            return;
        } 

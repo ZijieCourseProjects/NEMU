@@ -88,8 +88,9 @@ static int cmd_p(char *args){
 
 static int cmd_wp(char *args){    
     bool success=true;
-    new_wp(args)->data=expr(args,&success);
-    Log("New watchpoint %s added\n",args);
+    WP *newWp=new_wp(args);
+    newWp->data=expr(args,&success);
+    Log("New watchpoint %s added.The value is:%d in DEC %x in HEX\n",args,newWp->data,newWp->data);
     return 0;
 }
 static int cmd_help(char *args);
