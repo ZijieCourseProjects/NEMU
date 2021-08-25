@@ -55,7 +55,6 @@ static int cmd_si(char* args){
 
 static int cmd_info(char * args){
     if(*args=='r'){
-        printf("Printing the value in the registers\n");
         printf("eax:0x%06x\n",cpu.eax);
         printf("ecx:0x%06x\n",cpu.ecx);
         printf("edx:0x%06x\n",cpu.edx);
