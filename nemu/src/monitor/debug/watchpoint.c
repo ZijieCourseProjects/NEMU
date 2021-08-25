@@ -10,6 +10,7 @@ void init_wp_pool() {
 	int i;
 	for(i = 0; i < NR_WP; i ++) {
 		wp_pool[i].NO = i;
+    wp_pool[i].prev=NULL;
     memset(wp_pool[i].exp,0,64);
 		wp_pool[i].next = &wp_pool[i + 1];
 	}
@@ -38,8 +39,10 @@ WP* new_wp(char * exp){
 }
 
 void free_wp(WP *wp){
-    wp->prev->next=wp->next;
-    wp->next->prev=wp->prev;
+    if(wp->prev)
+        wp->prev->next=wp->next;
+    if(wp->next)
+        wp->next->prev=wp->prev;
     wp->next=free_;
     memset(wp->exp, 0, 64);
     wp->prev=NULL;
