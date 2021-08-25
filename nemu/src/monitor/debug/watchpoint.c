@@ -24,7 +24,7 @@ WP* new_wp(char * exp){
         assert(0);
     }
     WP * ret=free_;
-    ret->exp=exp;
+    memcpy(ret->exp, exp, strlen(exp)+1);
     ret->next=head;
     if(head)
         head->prev=ret;
@@ -37,7 +37,7 @@ void free_wp(WP *wp){
     wp->prev->next=wp->next;
     wp->next->prev=wp->prev;
     wp->next=free_;
-    wp->exp=NULL;
+    memset(wp->exp, 0, 64);
     wp->prev=NULL;
     free_=wp;
     return;
