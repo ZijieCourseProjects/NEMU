@@ -43,10 +43,13 @@ void free_wp(int no){
     if(*wp->exp==0){
         printf("No watchpoint deleted!\n");
     }
-    if(wp->prev)
-        wp->prev->next=wp->next;
-    if(wp->next)
+    if(!wp->prev){
+    }else if(!wp->next){
+        wp->prev->next=NULL;
+    }else{
         wp->next->prev=wp->prev;
+        wp->prev->next=wp->next;
+    }        
     wp->next=free_;
     memset(wp->exp, 0, 64);
     wp->prev=NULL;
