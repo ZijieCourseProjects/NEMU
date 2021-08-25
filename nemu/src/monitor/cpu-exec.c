@@ -38,11 +38,12 @@ void do_int3() {
 
 /* Simulate how the CPU works. */
 void cpu_exec(volatile uint32_t n) {
-	if(nemu_state == END) {
-		printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-		return;
-	}
-	nemu_state = RUNNING;
+  if (nemu_state == END) {
+    printf("Program execution has ended. To restart the program, exit NEMU and "
+           "run again.\n");
+    return;
+  }
+  nemu_state = RUNNING;
 
 #ifdef DEBUG
 	volatile uint32_t n_temp = n;
@@ -84,9 +85,10 @@ void cpu_exec(volatile uint32_t n) {
            nemu_state=STOP;
        } 
        ptr=ptr->next;
-       if(nemu_state==STOP)
-           return;
-    } 
+     } 
+    if(nemu_state==STOP)
+       return;
+     
 
 
 #ifdef HAS_DEVICE
