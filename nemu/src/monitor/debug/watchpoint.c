@@ -4,7 +4,7 @@
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
-static WP *head, *free_;
+static WP *free_;
 
 void init_wp_pool() {
 	int i;
@@ -18,18 +18,27 @@ void init_wp_pool() {
 	free_ = wp_pool;
 }
 
-WP* new_wp(){
+WP* new_wp(char * exp){
     if(free_==NULL){
         Log("Too much watchpoints");
         assert(0);
     }
     WP * ret=free_;
+    ret->exp=exp;
+    ret->next=head;
+    if(head)
+        head->prev=ret;
+    head =ret;
     free_=free_->next;
     return ret;
 }
 
 void free_wp(WP *wp){
+    wp->prev->next=wp->next;
+    wp->next->prev=wp->prev;
     wp->next=free_;
+    wp->exp=NULL;
+    wp->prev=NULL;
     free_=wp;
     return;
 }

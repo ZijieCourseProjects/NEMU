@@ -85,6 +85,12 @@ static int cmd_p(char *args){
     printf("DEC:%d HEX:%x\n",expression,expression);
     return 0;
 }
+
+static int cmd_wp(char *args){    
+    new_wp(args);
+    Log("New watchpoint %s added\n",args);
+    return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -98,6 +104,7 @@ static struct {
     {"si", "Step continue the program", cmd_si},
     {"info", "Print some value", cmd_info},
     {"x", "scan the memory", cmd_scan},
+    {"w","add new watchpoint",cmd_wp},
     {"p","print something",cmd_p}
     /* TODO: Add more commands */
 
