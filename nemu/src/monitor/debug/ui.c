@@ -95,7 +95,7 @@ static int cmd_wp(char *args){
     }
     WP *newWp=new_wp(args);
     newWp->data=data;
-    Log("New watchpoint %s added.The value is:%d in DEC %x in HEX\n",args,newWp->data,newWp->data);
+    printf("New watchpoint %d added.The value of %s is:%d in DEC %x in HEX\n",newWp->NO,args,newWp->data,newWp->data);
     return 0;
 }
 static int cmd_help(char *args);
