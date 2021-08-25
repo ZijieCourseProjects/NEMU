@@ -216,6 +216,9 @@ void replaceToken() {
           if (tokens[i].str[3] == 'i' || tokens[i].str[3] == 'I')
             sprintf(tokens[i].str, "%d", cpu.gpr[6]._32);
           break;
+        case 'I':
+        case 'i':
+          sprintf(tokens[i].str, "%d",cpu.eip);
         }
       } else if (strlen(tokens[i].str) == 3){
         switch (tokens[i].str[1]) {
