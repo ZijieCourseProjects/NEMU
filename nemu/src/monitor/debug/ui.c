@@ -85,7 +85,7 @@ static int cmd_scan(char *args){
     if(length <=0)
         printf("invalid length\n");
     for(step=0;step<length;step++)
-        printf("%08x:[%08x]\n",addrToScan+32*step,swaddr_read(addrToScan+32*step, 4)+swaddr_read(addrToScan+32*step+4, 4)+swaddr_read(addrToScan+32*step+8, 4)+swaddr_read(addrToScan+32*step+12, 4));
+        printf("%08x:[%08x]\n",addrToScan+16*step,swaddr_read(addrToScan+16*step, 4)+swaddr_read(addrToScan+16*step+4, 4)+swaddr_read(addrToScan+16*step+8, 4)+swaddr_read(addrToScan+16*step+12, 4));
     return 0;
 }
 
