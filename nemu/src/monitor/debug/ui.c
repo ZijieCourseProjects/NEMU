@@ -55,15 +55,15 @@ static int cmd_si(char* args){
 
 static int cmd_info(char * args){
     if(*args=='r'){
-        printf("eax:0x%06x in HEX %d in DEC\n",cpu.eax,cpu.eax);
-        printf("ecx:0x%06x in HEX %d in DEC\n",cpu.ecx,cpu.ecx);
-        printf("edx:0x%06x in HEX %d in DEC\n",cpu.edx,cpu.edx);
-        printf("ebx:0x%06x in HEX %d in DEC\n",cpu.ebx,cpu.ebx);
-        printf("esp:0x%06x in HEX %d in DEC\n",cpu.esp,cpu.esp);
-        printf("ebp:0x%06x in HEX %d in DEC\n",cpu.ebp,cpu.ebp);
-        printf("esi:0x%06x in HEX %d in DEC\n",cpu.esi,cpu.esi);
-        printf("edi:0x%06x in HEX %d in DEC\n",cpu.edi,cpu.edi);
-        printf("eip:0x%06x in HEX %d in DEC\n",cpu.eip,cpu.eip);
+        printf("eax:0x%08x in HEX %d in DEC\n",cpu.eax,cpu.eax);
+        printf("ecx:0x%08x in HEX %d in DEC\n",cpu.ecx,cpu.ecx);
+        printf("edx:0x%08x in HEX %d in DEC\n",cpu.edx,cpu.edx);
+        printf("ebx:0x%08x in HEX %d in DEC\n",cpu.ebx,cpu.ebx);
+        printf("esp:0x%08x in HEX %d in DEC\n",cpu.esp,cpu.esp);
+        printf("ebp:0x%08x in HEX %d in DEC\n",cpu.ebp,cpu.ebp);
+        printf("esi:0x%08x in HEX %d in DEC\n",cpu.esi,cpu.esi);
+        printf("edi:0x%08x in HEX %d in DEC\n",cpu.edi,cpu.edi);
+        printf("eip:0x%08x in HEX %d in DEC\n",cpu.eip,cpu.eip);
     }else if(*args=='w'){
         WP *ptr=head;
         while(ptr&&*ptr->exp){
@@ -85,7 +85,7 @@ static int cmd_scan(char *args){
     if(length <=0)
         printf("invalid length\n");
     for(step=0;step<length;step++)
-        printf("%08x:[%08x]\n",addrToScan+32*step,swaddr_read(addrToScan+4*step, 32));
+        printf("%08x:[%08x]\n",addrToScan+32*step,swaddr_read(addrToScan+32*step, 4)+swaddr_read(addrToScan+32*step+4, 4)+swaddr_read(addrToScan+32*step+8, 4)+swaddr_read(addrToScan+32*step+12, 4));
     return 0;
 }
 
