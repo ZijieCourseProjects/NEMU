@@ -55,14 +55,14 @@ static int cmd_si(char* args){
 
 static int cmd_info(char * args){
     if(*args=='r'){
-        printf("eax:0x%06x\n",cpu.eax);
-        printf("ecx:0x%06x\n",cpu.ecx);
-        printf("edx:0x%06x\n",cpu.edx);
-        printf("ebx:0x%06x\n",cpu.ebx);
-        printf("esp:0x%06x\n",cpu.esp);
-        printf("ebp:0x%06x\n",cpu.ebp);
-        printf("esi:0x%06x\n",cpu.esi);
-        printf("edi:0x%06x\n",cpu.edi);
+        printf("eax:0x%08x in HEX %d in DEC\n",cpu.eax,cpu.eax);
+        printf("ecx:0x%08x in HEX %d in DEC\n",cpu.ecx,cpu.ecx);
+        printf("edx:0x%08x in HEX %d in DEC\n",cpu.edx,cpu.edx);
+        printf("ebx:0x%08x in HEX %d in DEC\n",cpu.ebx,cpu.ebx);
+        printf("esp:0x%08x in HEX %d in DEC\n",cpu.esp,cpu.esp);
+        printf("ebp:0x%08x in HEX %d in DEC\n",cpu.ebp,cpu.ebp);
+        printf("esi:0x%08x in HEX %d in DEC\n",cpu.esi,cpu.esi);
+        printf("edi:0x%08x in HEX %d in DEC\n",cpu.edi,cpu.edi);
     }else if(*args=='w'){
         WP *ptr=head;
         while(ptr&&*ptr->exp){
@@ -77,7 +77,8 @@ static int cmd_info(char * args){
 }
 
 static int cmd_scan(char *args){
-    swaddr_t addrToScan;
+    bool success=true;
+    swaddr_t addrToScan=expr(args, &success);
     uint32_t length;
     uint32_t step;
     sscanf(args,"%d 0x%x",&length,&addrToScan);
