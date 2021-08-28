@@ -6,6 +6,6 @@ static void do_execute(){
     update_eflags_pf_zf_sf(op_dest->val-op_src->val);
 }
 
-make_instr_helper(i2rm)
+make_instr_helper(rm_imm)
 
 #include "cpu/exec/template-end.h"
