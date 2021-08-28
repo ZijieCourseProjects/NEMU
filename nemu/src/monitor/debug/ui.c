@@ -63,6 +63,7 @@ static int cmd_info(char * args){
         printf("ebp:0x%08x in HEX %d in DEC\n",cpu.ebp,cpu.ebp);
         printf("esi:0x%08x in HEX %d in DEC\n",cpu.esi,cpu.esi);
         printf("edi:0x%08x in HEX %d in DEC\n",cpu.edi,cpu.edi);
+        printf("eip:0x%08x in HEX %d in DEC\n",cpu.eip,cpu.eip);
     }else if(*args=='w'){
         WP *ptr=head;
         while(ptr&&*ptr->exp){
