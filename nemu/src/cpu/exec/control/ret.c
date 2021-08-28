@@ -1,5 +1,5 @@
 #include "cpu/exec/helper.h"
-#define DATA_BYTE 1
+#define DATA_BYTE 4
 #include "cpu/exec/template-start.h"
 make_helper(ret){
     if(ops_decoded.is_operand_size_16){
