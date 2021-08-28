@@ -31,6 +31,7 @@ make_helper(concat(decode_si_, SUFFIX)) {
   if(DATA_BYTE == 4 && (op_src->simm&0x80000000))
       op_src->simm=(int32_t)(op_src->simm);
   Log("%d",op_src->simm);
+  op_src->val=op_src->simm;
 
 #ifdef DEBUG
 	snprintf(op_src->str, OP_STR_SIZE, "$0x%x", op_src->val);
