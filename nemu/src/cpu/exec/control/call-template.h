@@ -11,6 +11,7 @@ static void do_execute(){
         MEM_W(cpu.esp, cpu.eip+decode_i_l(cpu.eip+1)+1);
     }
         cpu.eip+=op_src->val;
+    print_asm_template1();
 }
 
 make_instr_helper(i)

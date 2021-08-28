@@ -10,6 +10,7 @@ static void do_execute(){
         MEM_W(REG(op_src->reg), MEM_R(cpu.esp));
         cpu.esp+=4;
     }
+    print_asm_template1();
 }
 make_instr_helper(r)
 
