@@ -4,7 +4,6 @@
 
 static void do_execute(){
     if(cpu.eflags.ZF){
-        Log("%x",op_src->val);
         cpu.eip+=op_src->val;
         if(ops_decoded.is_operand_size_16)
             cpu.eip=cpu.eip&0x0000FFFF;
