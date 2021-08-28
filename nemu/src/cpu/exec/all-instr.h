@@ -23,6 +23,7 @@
 #include "control/call.h"
 #include "control/je.h"
 #include "control/jle.h"
+#include "control/jne.h"
 #include "control/ret.h"
 #include "control/leave.h"
 
@@ -46,4 +47,3 @@
 #include "misc/misc.h"
 
 #include "special/special.h"
-
