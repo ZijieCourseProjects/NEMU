@@ -30,7 +30,6 @@ make_helper(concat(decode_si_, SUFFIX)) {
       op_src->simm=(int8_t)(op_src->simm);
   if(DATA_BYTE == 4 && (op_src->simm&0x80000000))
       op_src->simm=(int32_t)(op_src->simm);
-  Log("%d",op_src->simm);
   op_src->val=op_src->simm;
 
 #ifdef DEBUG
@@ -116,8 +115,8 @@ make_helper(concat(decode_i2rm_, SUFFIX)) {
 	return len;
 }
 
-/* XX <- Ib 
- * eXX <- Iv 
+/* XX <- Ib
+ * eXX <- Iv
  */
 make_helper(concat(decode_i2r_, SUFFIX)) {
 	decode_r_internal(eip, op_dest);
