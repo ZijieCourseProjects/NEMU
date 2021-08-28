@@ -23,6 +23,8 @@
 #include "control/je.h"
 #include "control/jle.h"
 #include "control/ret.h"
+#include "control/leave.h"
+
 
 #include "logic/and.h"
 #include "logic/or.h"
