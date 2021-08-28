@@ -25,7 +25,12 @@ make_helper(concat(decode_i_, SUFFIX)) {
 /* sign immediate */
 make_helper(concat(decode_si_, SUFFIX)) {
 	op_src->type = OP_TYPE_IMM;
-  op_src->simm=(int8_t)(instr_fetch(eip,DATA_BYTE));
+  op_src->simm=(instr_fetch(eip,DATA_BYTE));
+  if(DATA_BYTE == 1 && (op_src->simm&0x80))
+      op_src->simm=(int8_t)(op_src->simm);
+  if(DATA_BYTE == 4 && (op_src->simm&0x80000000))
+      op_src->simm=(int32_t)(op_src->simm);
+
 
 #ifdef DEBUG
 	snprintf(op_src->str, OP_STR_SIZE, "$0x%x", op_src->val);
