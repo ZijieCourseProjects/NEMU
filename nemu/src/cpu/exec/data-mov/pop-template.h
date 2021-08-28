@@ -3,6 +3,7 @@
 #define instr pop
 
 static void do_execute(){
+    Log("%x,%x",REG(op_src->val),cpu.ebp);
     if(ops_decoded.is_operand_size_16){
         MEM_W(REG(op_src->val), MEM_R(cpu.esp));
         cpu.esp+=2;
