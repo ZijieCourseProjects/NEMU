@@ -3,9 +3,13 @@
 #define instr cmp
 
 static void do_execute(){
-    update_eflags_pf_zf_sf(op_dest->val-op_src->val);
+    uint32_t result=op_dest->val-op_src->val;
+    update_eflags_pf_zf_sf(result);
+    cpu.eflags.CF=(unsigned)(op_dest->val)>(unsigned)(result);
+    cpu.eflags.OF=((op_dest->val<op_src->val)&&(result>0))||((op_dest->val>op_src->val)&&result<0);
 }
 
-make_instr_helper(rm_imm)
+make_instr_helper(i2rm)
+make_instr_helper(r2rm)
 
 #include "cpu/exec/template-end.h"
