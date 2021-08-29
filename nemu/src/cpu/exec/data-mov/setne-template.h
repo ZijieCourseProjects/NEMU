@@ -7,8 +7,8 @@ static void do_execute(){
     if(!cpu.eflags.ZF){
         op_src->val=1;
     }else{
+        Log("%x",op_src->val);
         op_src->val=0;
-        Log("aaa");
     }
     print_asm_template1();
 }
