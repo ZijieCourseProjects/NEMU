@@ -9,5 +9,6 @@ make_helper(ret){
         cpu.eip=MEM_R(cpu.esp);
         cpu.esp+=4;
     }
+    print_asm_template1();
     return 0;
 }
