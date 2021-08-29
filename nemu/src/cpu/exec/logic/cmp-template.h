@@ -17,7 +17,7 @@ make_instr_helper(r2rm)
 
 #if DATA_BYTE == 1
 make_helper(cmp_al_b){
-    int8_t simm = instr_fetch(eip+2,1);
+    int8_t simm = instr_fetch(eip+1,1);
     DATA_TYPE result=(cpu.eax&0xFF)-simm;
     update_eflags_pf_zf_sf((int8_t)result);
       Log("result: %d,ZF:%d",result,cpu.eflags.ZF);
