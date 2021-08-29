@@ -8,6 +8,7 @@ static void do_execute(){
         op_src->val=1;
     }else{
         op_src->val=0;
+        Log("aaa");
     }
     print_asm_template1();
 }
