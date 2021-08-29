@@ -53,7 +53,7 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
-USERPROG := obj/testcase/bubble-sort
+USERPROG := obj/testcase/gotbaha
 ENTRY := $(USERPROG)
 
 entry: $(ENTRY)
@@ -65,7 +65,7 @@ run: $(nemu_BIN) $(USERPROG) entry
 gdb: $(nemu_BIN) $(USERPROG) entry
 	gdb -s $(nemu_BIN) --args $(nemu_BIN) $(USERPROG)
 
-test: $(nemu_BIN) $(testcase_BIN) entry
+test: $(nemu_BIN) $(testcase_BIN) entrya
 #	$(call git_commit, "test")
 	bash test.sh $(testcase_BIN)
 

@@ -26,6 +26,7 @@
 #include "control/jbe.h"
 #include "control/jg.h"
 #include "control/jle.h"
+#include "control/jl.h"
 #include "control/jne.h"
 #include "control/ret.h"
 #include "control/leave.h"
