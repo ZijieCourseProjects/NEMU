@@ -8,7 +8,7 @@ static void do_execute(){
         cpu.esp+=2;
     }else{
       Log("%x",MEM_R(cpu.esp));
-        MEM_W(REG(op_src->reg), MEM_R(cpu.esp));
+        OPERAND_W(op_dest, MEM_R(cpu.esp));
         cpu.esp+=4;
     }
     print_asm_template1();
