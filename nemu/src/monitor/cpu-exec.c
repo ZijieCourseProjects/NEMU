@@ -77,7 +77,7 @@ void cpu_exec(volatile uint32_t n) {
 
 		/* TODO: check watchpoints here. */
     WP * ptr=head;
-    bool success;
+    bool success=true;
     while(ptr&&*ptr->exp){
         uint32_t fresh=expr(ptr->exp, &success);
        if(fresh!=ptr->data){
