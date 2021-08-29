@@ -66,7 +66,7 @@ gdb: $(nemu_BIN) $(USERPROG) entry
 	gdb -s $(nemu_BIN) --args $(nemu_BIN) $(USERPROG)
 
 test: $(nemu_BIN) $(testcase_BIN) entry
-	$(call git_commit, "test")
+#	$(call git_commit, "test")
 	bash test.sh $(testcase_BIN)
 
 submit: clean
