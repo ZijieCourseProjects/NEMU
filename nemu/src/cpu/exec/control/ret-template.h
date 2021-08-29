@@ -17,13 +17,8 @@ make_helper(ret){
 #if DATA_BYTE == 2
 make_helper(ret_imm){
     int16_t imm=instr_fetch(eip+1, 2);
-    if(ops_decoded.is_operand_size_16){
-        cpu.eip=MEM_R(cpu.esp)&0x0000FFFF;
-        cpu.esp+=2;
-    }else{
         cpu.eip=MEM_R(cpu.esp);
         cpu.esp+=4;
-    }
     Log("%d",imm);
     cpu.esp+=imm;
     print_asm("ret");
