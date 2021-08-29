@@ -3,11 +3,10 @@
 #define instr cmp
 
 static void do_execute(){
-    DATA_TYPE result=op_src->val-op_dest->val;
+    DATA_TYPE result=op_dest->val-op_src->val;
     update_eflags_pf_zf_sf((DATA_TYPE_S)result);
       cpu.eflags.CF = result > op_dest->val;
       cpu.eflags.OF = MSB((op_dest->val ^ op_src->val) & (op_dest->val ^ result));
-      Log("a:%x,b:%x,result:%x,ZF:%d,CF:%d,SF:%d,OF:%d",op_dest->val,op_src->val,result,cpu.eflags.ZF,cpu.eflags.CF,cpu.eflags.SF,cpu.eflags.OF);
     print_asm_template2();
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
