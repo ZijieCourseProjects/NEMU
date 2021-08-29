@@ -4,10 +4,11 @@
 
 static void do_execute(){
     if(ops_decoded.is_operand_size_16){
-        OPERAND_W(op_dest, MEM_R(cpu.esp));
+        MEM_W(REG(op_src->reg), MEM_R(cpu.esp));
         cpu.esp+=2;
     }else{
-        OPERAND_W(op_dest, MEM_R(cpu.esp));
+      Log("%x",MEM_R(cpu.esp));
+        MEM_W(REG(op_src->reg), MEM_R(cpu.esp));
         cpu.esp+=4;
     }
     print_asm_template1();
