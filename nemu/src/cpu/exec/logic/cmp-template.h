@@ -14,13 +14,13 @@ make_instr_helper(si2rm)
 #endif
 
 make_instr_helper(r2rm)
+make_instr_helper(i2rm)
 
 #if DATA_BYTE == 1
 make_helper(cmp_al_b){
     int8_t simm = instr_fetch(eip+1,1);
     DATA_TYPE result=(cpu.eax&0xFF)-simm;
     update_eflags_pf_zf_sf((int8_t)result);
-      Log("result: %d,ZF:%d",result,cpu.eflags.ZF);
       cpu.eflags.CF = result > (cpu.eax&0xFF);
       cpu.eflags.OF = MSB(((cpu.eax&0xFF) ^ simm) & (simm ^ result));
       return 2;
