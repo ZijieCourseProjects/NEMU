@@ -10,6 +10,13 @@ static void do_execute(){
     }
     print_asm_template1();
 }
+
+#if DATA_BYTE == 1 || DATA_BYTE ==4
 make_instr_helper(si)
+#endif
+
+make_instr_helper(r)
+make_instr_helper(i)
+
 
 #include "cpu/exec/template-end.h"
