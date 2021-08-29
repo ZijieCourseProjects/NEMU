@@ -17,8 +17,9 @@ make_helper(ret){
 #if DATA_BYTE == 2
 make_helper(ret_imm){
     int16_t imm=instr_fetch(eip+1, 2);
-        cpu.eip=MEM_R(cpu.esp);
-        cpu.esp+=4;
+    cpu.eip=MEM_R(cpu.esp);
+    cpu.esp+=4;
+    Log("%d",cpu.eip);
     Log("%d",imm);
     cpu.esp+=imm;
     print_asm("ret");
