@@ -7,7 +7,7 @@ static void do_execute(){
     update_eflags_pf_zf_sf((DATA_TYPE_S)result);
       cpu.eflags.CF = result > op_dest->val;
       cpu.eflags.OF = MSB((op_dest->val ^ op_src->val) & (op_dest->val ^ result));
-      Log("ZF:%d,CF:%d,SF:%d,OF:%d",cpu.eflags.ZF,cpu.eflags.CF,cpu.eflags.SF,cpu.eflags.OF);
+      Log("result:%x,ZF:%d,CF:%d,SF:%d,OF:%d",result,cpu.eflags.ZF,cpu.eflags.CF,cpu.eflags.SF,cpu.eflags.OF);
     print_asm_template2();
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
