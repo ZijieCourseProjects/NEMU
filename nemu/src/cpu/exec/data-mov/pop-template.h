@@ -7,7 +7,6 @@ static void do_execute(){
         OPERAND_W(op_src, MEM_R(cpu.esp));
         cpu.esp+=2;
     }else{
-      Log("%x",MEM_R(cpu.esp));
         OPERAND_W(op_src, MEM_R(cpu.esp));
         cpu.esp+=4;
     }
