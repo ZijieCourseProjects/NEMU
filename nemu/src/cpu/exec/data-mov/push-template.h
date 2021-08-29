@@ -10,12 +10,6 @@ static void do_execute(){
 
 
 make_instr_helper(r)
-
-make_helper(concat(push_m_,SUFFIX)){
-  cpu.esp-=DATA_BYTE;
-  MEM_W(cpu.esp,MEM_R(instr_fetch(eip+1,DATA_BYTE)));
-  print_asm_template1();
-  return 1+DATA_BYTE;
-}
+make_instr_helper(rm)
 
 #include "cpu/exec/template-end.h"
