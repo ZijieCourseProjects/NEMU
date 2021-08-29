@@ -15,5 +15,6 @@ make_instr_helper(si)
 #endif
 
 make_instr_helper(r)
+make_instr_helper(i)
 
 #include "cpu/exec/template-end.h"
