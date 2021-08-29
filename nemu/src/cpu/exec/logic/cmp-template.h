@@ -19,8 +19,8 @@ make_instr_helper(r2rm)
 make_helper(cmp_al_b){
     int8_t simm = instr_fetch(eip+2,1);
     DATA_TYPE result=(cpu.eax&0xFF)-simm;
-    update_eflags_pf_zf_sf((DATA_TYPE_S)result);
-      Log("%d",cpu.eflags.ZF);
+    update_eflags_pf_zf_sf((int8_t)result);
+      Log("result: %d,ZF:%d",result,cpu.eflags.ZF);
       cpu.eflags.CF = result > (cpu.eax&0xFF);
       cpu.eflags.OF = MSB(((cpu.eax&0xFF) ^ simm) & (simm ^ result));
       return 2;
