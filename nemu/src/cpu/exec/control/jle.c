@@ -13,5 +13,4 @@
 #undef DATA_BYTE
 
 make_helper_v(jle_r)
-
-
+make_helper_v(jle_i)
