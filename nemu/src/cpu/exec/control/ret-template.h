@@ -24,6 +24,7 @@ make_helper(ret_imm){
         cpu.eip=MEM_R(cpu.esp);
         cpu.esp+=4;
     }
+    Log("%d",imm);
     cpu.esp+=imm;
     print_asm("ret");
     return 0;
