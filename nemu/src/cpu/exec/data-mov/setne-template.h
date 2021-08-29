@@ -5,9 +5,9 @@
 static void do_execute(){
     Log("%d",cpu.eflags.ZF);
     if(!cpu.eflags.ZF){
-        op_src->val=1;
+        op_dest->val=1;
     }else{
-        op_src->val=0;
+        op_dest->val=0;
         Log("val:%x",op_src->val);
     }
     print_asm_template1();
