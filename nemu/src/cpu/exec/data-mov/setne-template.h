@@ -3,6 +3,7 @@
 #define instr setne
 
 static void do_execute(){
+    Log("%d",cpu.eflags.ZF);
     if(!cpu.eflags.ZF){
         op_src->val=1;
     }else{
