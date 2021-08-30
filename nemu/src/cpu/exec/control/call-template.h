@@ -17,7 +17,7 @@ make_helper(concat(call_rm_,SUFFIX)){
         swaddr_t next = instr_fetch(eip+1,DATA_BYTE);
         Log("%x",next);
         cpu.eip=next;
-        return 1+DATA_BYTE;
+        return 0;
 }
 
 #include "cpu/exec/template-end.h"
