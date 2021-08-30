@@ -1,8 +1,7 @@
 #include "FLOAT.h"
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-	char S = sign(a) ^ sign(b);
-  return S? toNeg((toUnsign(a)*toUnsign(b)) >>16 ):(toUnsign(a) *toUnsign(b))>>16;
+  return a * b >> 16 ;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
@@ -48,12 +47,12 @@ FLOAT f2F(float a) {
 	 * stack. How do you retrieve it to another variable without
 	 * performing arithmetic operations on it directly?
 	 */
-	int t = *((int*)&a);
-	int s = t >> 31;
-	int E = (t >> 23) & 0xff;
-	int m = t & 0x7fffff;
+	FLOAT t = *((int*)&a);
+	FLOAT s = t >> 31;
+	FLOAT E = (t >> 23) & 0xff;
+	FLOAT m = t & 0x7fffff;
 	FLOAT res = m;
-	int e = E - 0x7f;
+	FLOAT e = E - 0x7f;
 	if(!E){
 		if(!m) return 0;
 		else e = 1 - E;
@@ -73,7 +72,6 @@ FLOAT f2F(float a) {
 
 FLOAT Fabs(FLOAT a) {
     return toUnsign(a);
-	return 0;
 }
 
 /* Functions below are already implemented */

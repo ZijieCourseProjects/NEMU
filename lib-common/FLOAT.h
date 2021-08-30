@@ -5,12 +5,12 @@
 
 typedef int FLOAT;
 
-static inline signed short sign(FLOAT a){
-    return (a>>31 & 0x1)?1:0;
+static inline signed short msb(FLOAT a){
+    return a>>31 & 0x1;
 }
 
 static inline FLOAT toUnsign(FLOAT x){
-    return x&0x7FFFFFFF;
+    return msb(x)?-x:x;
 }
 
 static inline int toUnsign_i(int x){
@@ -18,11 +18,11 @@ static inline int toUnsign_i(int x){
 }
 
 static inline FLOAT toNeg(FLOAT x){
-    return x|0x80000000;
+    return -x;
 }
 
 static inline int F2int(FLOAT a) {
-    return sign(a)? -1 * (toUnsign(a) >> 16):(toUnsign(a)>>16);
+    return msb(a)? -1 * (toUnsign(a) >> 16):(toUnsign(a)>>16);
 }
 
 static inline FLOAT int2F(int a) {
