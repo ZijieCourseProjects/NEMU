@@ -4,18 +4,28 @@
 
 static void do_execute(){
     if(ops_decoded.is_operand_size_16){
-        cpu.esp-=2;
-        MEM_W(cpu.esp,cpu.eip+decode_i_w(cpu.eip+1)+1);
+        cpu.esp-=DATA_BYTE;
+        MEM_W(cpu.esp,cpu.eip+DATA_BYTE+1);
     }else{
-        cpu.esp-=4;
-        MEM_W(cpu.esp, cpu.eip+decode_i_l(cpu.eip+1)+1);
+        cpu.esp-=DATA_BYTE;
+        MEM_W(cpu.esp, cpu.eip+DATA_BYTE+1);
     }
         cpu.eip+=op_src->val;
     print_asm_template1();
 }
 
 make_instr_helper(i)
-make_instr_helper(rm)
 
+make_helper(concat(call_rm_,SUFFIX)){
+    if(ops_decoded.is_operand_size_16){
+        cpu.esp-=DATA_BYTE;
+        MEM_W(cpu.esp,cpu.eip+DATA_BYTE+1);
+    }else{
+        cpu.esp-=DATA_BYTE;
+        MEM_W(cpu.esp, cpu.eip+DATA_BYTE+1);
+    }
+        cpu.eip=instr_fetch(eip+1,DATA_BYTE);
+        return 1+DATA_BYTE;
+}
 
 #include "cpu/exec/template-end.h"
