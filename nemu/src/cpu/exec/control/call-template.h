@@ -12,11 +12,11 @@ static void do_execute(){
 make_instr_helper(i)
 
 make_helper(concat(call_rm_,SUFFIX)){
+        concat(decode_rm_,SUFFIX)(eip);
         cpu.esp-=DATA_BYTE;
         MEM_W(cpu.esp, cpu.eip+DATA_BYTE+1);
-        swaddr_t next = instr_fetch(eip+1,DATA_BYTE);
-        Log("%x",next);
-        cpu.eip=next;
+        Log("%x",op_src->val);
+        cpu.eip=op_src->val;
         return 0;
 }
 
