@@ -23,7 +23,6 @@ static inline FLOAT toNeg(FLOAT x){
 
 static inline int F2int(FLOAT a) {
     return sign(a)? -1 * (toUnsign(a) >> 16):(toUnsign(a)>>16);
-	return 0;
 }
 
 static inline FLOAT int2F(int a) {
@@ -39,13 +38,11 @@ static inline FLOAT int2F(int a) {
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
-    char S = sign(a) ^ (b<0)?1:0;
-    return S? toNeg(toUnsign(a)*toUnsign_i(b)):toUnsign(a)*toUnsign_i(b);
+    return a*b;
 }
 
 static inline FLOAT F_div_int(FLOAT a, int b) {
-    char S = sign(a) ^ (b<0)?1:0;
-    return S? toNeg(toUnsign(a)/toUnsign_i(b)):toUnsign(a)/toUnsign_i(b);
+    return a/b;
 }
 
 
