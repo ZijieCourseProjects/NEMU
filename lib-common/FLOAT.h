@@ -5,25 +5,50 @@
 
 typedef int FLOAT;
 
+static inline signed short sign(FLOAT a){
+    return (a>>31 & 0x1)?1:0;
+}
+
+static inline FLOAT toUnsign(FLOAT x){
+    return x&0x7FFFFFFF;
+}
+
+static inline int toUnsign_i(int x){
+    return x<0?-x:x;
+}
+
+static inline FLOAT toNeg(FLOAT x){
+    return x|0x80000000;
+}
+
 static inline int F2int(FLOAT a) {
-	nemu_assert(0);
+    return sign(a)? -1 * (toUnsign(a) >> 16):(toUnsign(a)>>16);
 	return 0;
 }
 
 static inline FLOAT int2F(int a) {
-	nemu_assert(0);
-	return 0;
+    char Sa = (a<0)?1:0;
+    if(Sa){
+        a=-a;
+    }
+    FLOAT x = a << 16;
+    if(Sa){
+        x=toNeg(x);
+    }
+	return x;
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
-	nemu_assert(0);
-	return 0;
+    char S = sign(a) ^ (b<0)?1:0;
+    return S? toNeg(toUnsign(a)*toUnsign_i(b)):toUnsign(a)*toUnsign_i(b);
 }
 
 static inline FLOAT F_div_int(FLOAT a, int b) {
-	nemu_assert(0);
-	return 0;
+    char S = sign(a) ^ (b<0)?1:0;
+    return S? toNeg(toUnsign(a)/toUnsign_i(b)):toUnsign(a)/toUnsign_i(b);
 }
+
+
 
 FLOAT f2F(float);
 FLOAT F_mul_F(FLOAT, FLOAT);

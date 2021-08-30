@@ -1,8 +1,8 @@
 #include "FLOAT.h"
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-	nemu_assert(0);
-	return 0;
+	char S = sign(a) ^ sign(b);
+  return S? toNeg((toUnsign(a)*toUnsign(b)) >>16 ):(toUnsign(a) *toUnsign(b))>>16;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
@@ -23,9 +23,19 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * It is OK not to use the template above, but you should figure
 	 * out another way to perform the division.
 	 */
-
-	nemu_assert(0);
-	return 0;
+    char S = sign(a) ^ sign(b);
+    int quotient = toUnsign(a)/toUnsign(b);
+    int remaind = toUnsign(a)%toUnsign(b);
+    int i;
+    for(i=0;i<16;i++){
+        quotient <<= 1;
+        remaind <<= 1;
+        if(remaind >= toUnsign(b)){
+            remaind -= toUnsign(b);
+            quotient |=1;
+        }
+    }
+	return S?toNeg(quotient):quotient ;
 }
 
 FLOAT f2F(float a) {
@@ -38,13 +48,31 @@ FLOAT f2F(float a) {
 	 * stack. How do you retrieve it to another variable without
 	 * performing arithmetic operations on it directly?
 	 */
+	int t = *((int*)&a);
+	int s = t >> 31;
+	int E = (t >> 23) & 0xff;
+	int m = t & 0x7fffff;
+	FLOAT res = m;
+	int e = E - 0x7f;
+	if(!E){
+		if(!m) return 0;
+		else e = 1 - E;
+	} else if(!(E ^ 0xff)){
+		return (-1) ^ ((!s) << 31);
+	}else res |= (1 << 23);
+	// now point is at l:23
+	// (s)(31) (30)--(23).(22)--(16).(15)...(0)
+	if(e > 7){
+		res <<= e - 7;
+	} else {
+		res >>= -e + 7;
+	}
 
-	nemu_assert(0);
-	return 0;
+	return s?toNeg(res):res;
 }
 
 FLOAT Fabs(FLOAT a) {
-	nemu_assert(0);
+    return toUnsign(a);
 	return 0;
 }
 
