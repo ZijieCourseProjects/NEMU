@@ -9,7 +9,6 @@ make_helper(cmp_rm2r_b);
 make_helper(cmp_i2rm_b);
 make_helper(cmp_i2rm_v);
 make_helper(cmp_eax_b);
-make_helper(cmp_eax_w);
-make_helper(cmp_eax_l);
+make_helper(cmp_eax_v);
 
 #endif

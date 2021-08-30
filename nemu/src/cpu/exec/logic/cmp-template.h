@@ -21,7 +21,6 @@ make_helper(concat(cmp_eax_,SUFFIX)){
 
   DATA_TYPE b=instr_fetch(eip+1,DATA_BYTE);
 	DATA_TYPE result = REG(R_EAX) - b ;
-	REG(R_EAX)=result;
   cpu.eflags.CF = result > REG(R_EAX);
   cpu.eflags.OF = MSB((REG(R_EAX) ^ b) & (REG(R_EAX) ^ result));
 	print_asm_template2();
