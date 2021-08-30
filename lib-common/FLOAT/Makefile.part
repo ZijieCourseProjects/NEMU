@@ -11,7 +11,7 @@ $(FLOAT): $(FLOAT_A_OBJ)
 
 # TODO: complete the following rules
 INCLUDE = -I $(LIB_COMMON_DIR)
-FLOAT_CFLAGS := -m32 -O2 -fno-stack-protector -D_FORTIFY_SOURCE=0 -fno-builtin -msoft-float -mno-sse  $(INCLUDE)
+FLOAT_CFLAGS := -m32 -O2 -fno-builtin  $(INCLUDE)
 
 
 $(FLOAT_O): $(LIB_COMMON_DIR)/FLOAT/FLOAT.c
@@ -22,5 +22,5 @@ $(FLOAT_O): $(LIB_COMMON_DIR)/FLOAT/FLOAT.c
 
 $(FLOAT_VFPRINTF_O): $(LIB_COMMON_DIR)/FLOAT/FLOAT_vfprintf.c
 	@mkdir -p obj/$(LIB_COMMON_DIR)/FLOAT
-	$(CC) $(FLOAT_CFLAGS) -c $^
+	$(CC) $(FLOAT_CFLAGS) -fno-stack-protector -D_FORTIFY_SOURCE=0 -c $^
 	mv FLOAT_vfprintf.o obj/$(LIB_COMMON_DIR)/FLOAT
