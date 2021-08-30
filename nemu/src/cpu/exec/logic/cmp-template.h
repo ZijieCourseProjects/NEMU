@@ -17,15 +17,14 @@ make_instr_helper(r2rm)
 make_instr_helper(rm2r)
 make_instr_helper(i2rm)
 
-#if DATA_BYTE == 1
-make_helper(cmp_al_b){
-    int8_t simm = instr_fetch(eip+1,1);
-    DATA_TYPE result=(cpu.eax&0xFF)-simm;
-    update_eflags_pf_zf_sf((int8_t)result);
-      cpu.eflags.CF = result > (cpu.eax&0xFF);
-      cpu.eflags.OF = MSB(((cpu.eax&0xFF) ^ simm) & (simm ^ result));
-      return 2;
-}
-#endif
+make_helper(concat(cmp_eax_,SUFFIX)){
 
+  DATA_TYPE b=instr_fetch(eip+1,DATA_BYTE);
+	DATA_TYPE result = REG(R_EAX) - b ;
+	REG(R_EAX)=result;
+  cpu.eflags.CF = result > REG(R_EAX);
+  cpu.eflags.OF = MSB((REG(R_EAX) ^ b) & (REG(R_EAX) ^ result));
+	print_asm_template2();
+	return 1+DATA_BYTE;
+}
 #include "cpu/exec/template-end.h"
