@@ -53,7 +53,7 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
-USERPROG := obj/testcase/to-lower-case
+USERPROG := obj/testcase/add
 ENTRY := $(USERPROG)
 
 entry: $(ENTRY)
@@ -65,8 +65,8 @@ run: $(nemu_BIN) $(USERPROG) entry
 gdb: $(nemu_BIN) $(USERPROG) entry
 	gdb -s $(nemu_BIN) --args $(nemu_BIN) $(USERPROG)
 
-test: $(nemu_BIN) $(testcase_BIN) entrya
-#	$(call git_commit, "test")
+test: $(nemu_BIN) $(testcase_BIN) entry
+	$(call git_commit, "test")
 	bash test.sh $(testcase_BIN)
 
 submit: clean
