@@ -23,27 +23,14 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * It is OK not to use the template above, but you should figure
 	 * out another way to perform the division.
 	 */
-
 	 int sa = sign_bit(a);
 	 int sb = sign_bit(b);
 	 int s = int_no_sign(sa) * int_no_sign(sb);
-	// int noSa = a * int_no_sign(sa);
-	// int noSb = b * int_no_sign(sb);
-	// int res = noSa / noSb;
-	// int mod = noSa % noSb;
-	// int i;
-	// for(i = 0; i < 16; i++){
-	// 	res <<= 1;
-	// 	mod <<= 1;
-	// 	if(mod >= noSb){
-	// 		mod -= noSb;
-	// 		res |= 1;
-	// 	}
-	// }
+
 	FLOAT asmresup,modasm,asmresdown;	
 
-		asm volatile ("div %2": "=a" (asmresup),"=d"(modasm):"r" (int_no_sign(sb)*b),"a" (int_no_sign(sa)*a),"d" (0));
-		asm volatile ("div %2": "=a" (asmresdown),"=d"(modasm):"r" (int_no_sign(sb)*b),"a" (0),"d" (modasm));
+	asm volatile ("div %2": "=a" (asmresup),"=d"(modasm):"r" (int_no_sign(sb)*b),"a" (int_no_sign(sa)*a),"d" (0));
+	asm volatile ("div %2": "=a" (asmresdown),"=d"(modasm):"r" (int_no_sign(sb)*b),"a" (0),"d" (modasm));
 	asmresdown = 0x0000FFFF&(asmresdown>>16);
 	asmresup = asmresup << 16;
 	return (asmresup+asmresdown)*s;
@@ -62,22 +49,20 @@ FLOAT f2F(float a) {
 	 */
 	int t = *((int*)&a);
 	int s = t >> 31;
-	int E = (t >> 23) & 0xff;
+	int e = (t >> 23) & 0xff;
 	int m = t & 0x7fffff;
 	FLOAT res = m;
-	int e = E - 0x7f;
-	if(!E){
+	int exp = e - 0x7f;
+	if(!e){
 		if(!m) return 0;
-		else e = 1 - E;
-	} else if(!(E ^ 0xff)){
-		return (-1) ^ ((!s) << 31);
-	}else res |= (1 << 23);
-	// now point is at l:23
-	// (s)(31) (30)--(23).(22)--(16).(15)...(0)
-	if(e > 7){
-		res <<= e - 7;
+		else exp = 1 - e; 
+	} else if(!(e ^ 0xff)){ //if denormalized
+		return (-1) ^ ((!s) << 31); // positive infinity of negtive infinity
+	}else res |= (1 << 23);   // add 1(after shrl) as a normalized float number
+	if(exp > 7){
+		res <<= exp - 7;  //23-16=7
 	} else {
-		res >>= -e + 7;
+		res >>= -exp + 7;
 	}
 
 	return (res * int_sign(s));
@@ -85,7 +70,6 @@ FLOAT f2F(float a) {
 
 
 FLOAT Fabs(FLOAT a) {
-	// nemu_assert(0);
 	return a * int_no_sign(sign_bit(a));
 }
 
