@@ -22,7 +22,7 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * It is OK not to use the template above, but you should figure
 	 * out another way to perform the division.
 	 */
-    char S = sign(a) ^ sign(b);
+    char S = msb(a) ^ msb(b);
     int quotient = toUnsign(a)/toUnsign(b);
     int remaind = toUnsign(a)%toUnsign(b);
     int i;
