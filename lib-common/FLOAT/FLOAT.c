@@ -1,7 +1,8 @@
 #include "FLOAT.h"
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  return a * b >> 16 ;
+
+	return (FLOAT)((ll)a * (ll)b >> 16);
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
@@ -22,20 +23,32 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * It is OK not to use the template above, but you should figure
 	 * out another way to perform the division.
 	 */
-    char S = msb(a) ^ msb(b);
-    int quotient = toUnsign(a)/toUnsign(b);
-    int remaind = toUnsign(a)%toUnsign(b);
-    int i;
-    for(i=0;i<16;i++){
-        quotient <<= 1;
-        remaind <<= 1;
-        if(remaind >= toUnsign(b)){
-            remaind -= toUnsign(b);
-            quotient |=1;
-        }
-    }
-	return S?toNeg(quotient):quotient ;
+
+	 int sa = sign_bit(a);
+	 int sb = sign_bit(b);
+	 int s = int_no_sign(sa) * int_no_sign(sb);
+	// int noSa = a * int_no_sign(sa);
+	// int noSb = b * int_no_sign(sb);
+	// int res = noSa / noSb;
+	// int mod = noSa % noSb;
+	// int i;
+	// for(i = 0; i < 16; i++){
+	// 	res <<= 1;
+	// 	mod <<= 1;
+	// 	if(mod >= noSb){
+	// 		mod -= noSb;
+	// 		res |= 1;
+	// 	}
+	// }
+	FLOAT asmresup,modasm,asmresdown;	
+
+		asm volatile ("div %2": "=a" (asmresup),"=d"(modasm):"r" (int_no_sign(sb)*b),"a" (int_no_sign(sa)*a),"d" (0));
+		asm volatile ("div %2": "=a" (asmresdown),"=d"(modasm):"r" (int_no_sign(sb)*b),"a" (0),"d" (modasm));
+	asmresdown = 0x0000FFFF&(asmresdown>>16);
+	asmresup = asmresup << 16;
+	return (asmresup+asmresdown)*s;
 }
+
 
 FLOAT f2F(float a) {
 	/* You should figure out how to convert `a' into FLOAT without
@@ -47,12 +60,12 @@ FLOAT f2F(float a) {
 	 * stack. How do you retrieve it to another variable without
 	 * performing arithmetic operations on it directly?
 	 */
-	FLOAT t = *((int*)&a);
-	FLOAT s = t >> 31;
-	FLOAT E = (t >> 23) & 0xff;
-	FLOAT m = t & 0x7fffff;
+	int t = *((int*)&a);
+	int s = t >> 31;
+	int E = (t >> 23) & 0xff;
+	int m = t & 0x7fffff;
 	FLOAT res = m;
-	FLOAT e = E - 0x7f;
+	int e = E - 0x7f;
 	if(!E){
 		if(!m) return 0;
 		else e = 1 - E;
@@ -67,11 +80,13 @@ FLOAT f2F(float a) {
 		res >>= -e + 7;
 	}
 
-	return s?toNeg(res):res;
+	return (res * int_sign(s));
 }
 
+
 FLOAT Fabs(FLOAT a) {
-    return toUnsign(a);
+	// nemu_assert(0);
+	return a * int_no_sign(sign_bit(a));
 }
 
 /* Functions below are already implemented */
@@ -99,4 +114,3 @@ FLOAT pow(FLOAT x, FLOAT y) {
 
 	return t;
 }
-

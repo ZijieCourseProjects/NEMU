@@ -4,48 +4,27 @@
 #include "trap.h"
 
 typedef int FLOAT;
-
-static inline signed short msb(FLOAT a){
-    return a>>31 & 0x1;
-}
-
-static inline FLOAT toUnsign(FLOAT x){
-    return msb(x)?-x:x;
-}
-
-static inline int toUnsign_i(int x){
-    return x<0?-x:x;
-}
-
-static inline FLOAT toNeg(FLOAT x){
-    return -x;
-}
+#define ll long long
+#define sign_bit(res) (res >> 31) & 1
+#define int_no_sign(sign) (sign ? -1 : 1)
+#define int_sign(sign) int_no_sign(sign)
+#define test() printf("\n")
 
 static inline int F2int(FLOAT a) {
-    return msb(a)? -1 * (toUnsign(a) >> 16):(toUnsign(a)>>16);
+	return a >> 16;
 }
 
 static inline FLOAT int2F(int a) {
-    char Sa = (a<0)?1:0;
-    if(Sa){
-        a=-a;
-    }
-    FLOAT x = a << 16;
-    if(Sa){
-        x=toNeg(x);
-    }
-	return x;
+	return a << 16;
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
-    return a*b;
+	return (a * b);
 }
 
 static inline FLOAT F_div_int(FLOAT a, int b) {
-    return a/b;
+	return (a / b);
 }
-
-
 
 FLOAT f2F(float);
 FLOAT F_mul_F(FLOAT, FLOAT);
