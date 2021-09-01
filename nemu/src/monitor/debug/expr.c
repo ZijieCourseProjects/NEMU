@@ -228,10 +228,7 @@ bool replaceToken()
   {
     if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM)))
     {
-      uint32_t data = swaddr_read(strNum(tokens[i + 1].str, tokens[i + 1].type), 4);
       tokens[i].type = DEREF;
-      tokens[i + 1].type = HEXNUM;
-      sprintf(tokens[i + 1].str, "%x", data);
     }
     else if (tokens[i].type == '-' && (tokens[i - 1].type == '(' || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' || tokens[i - 1].type == '*' || tokens[i - 1].type == '/'))
     {
@@ -422,6 +419,8 @@ uint32_t eval(int p, int q, bool *success)
       return -val2;
       break;
     case DEREF:
+      return swaddr_read(val2,4);
+      break;
     default:
       return val2;
     }
