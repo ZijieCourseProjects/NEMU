@@ -213,21 +213,20 @@ uint32_t strNum(char *str, int type)
 bool replaceToken()
 {
   int i = 0;
-  for (; i < tokenCount; i++)
-  {
-    if (tokens[i].type == SYMBOL)
-    {
+  for(;i<tokenCount;i++){
+    if(tokens[i].type==SYMBOL){
       bool success_find;
-      swaddr_t addr = findvar(tokens[i].str, &success_find);
-      if (!success_find)
-      {
-        return false;
-      }
-      sprintf(tokens[i].str, "%x", addr);
-      tokens[i].type = HEXNUM;
-      i-=2;
+      swaddr_t addr = findvar(tokens[i].str,&success_find);
+        if(!success_find){
+          return false;
+        }
+      sprintf(tokens[i].str,"%x",addr);
+      tokens[i].type=HEXNUM;
     }
-    else if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM)))
+  }
+  for (i=0; i < tokenCount; i++)
+  {
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM)))
     {
       uint32_t data = swaddr_read(strNum(tokens[i + 1].str, tokens[i + 1].type), 4);
       tokens[i].type = DEREF;
