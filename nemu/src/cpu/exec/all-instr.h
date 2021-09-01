@@ -34,6 +34,7 @@
 #include "control/jne.h"
 #include "control/jge.h"
 #include "control/js.h"
+#include "control/jb.h"
 #include "control/ja.h"
 #include "control/ret.h"
 #include "control/leave.h"
