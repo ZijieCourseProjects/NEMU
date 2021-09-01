@@ -1,4 +1,5 @@
 #include "nemu.h"
+#include "monitor/myelf.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -112,6 +113,7 @@ tokenCount=0;
         case NUM:
         case HEXNUM:
         case REG:
+        case SYMBOL:
             tokens[tokenCount].type=rules[i].token_type;
             strncpy(tokens[tokenCount++].str, substr_start, substr_len);
             break;
@@ -175,7 +177,7 @@ uint32_t strNum(char * str,int type){
         sscanf(str,"%d",&ret);
     return ret;
 }
-void replaceToken() {
+bool replaceToken() {
   int i = 0;
   for (; i < tokenCount; i++) {
       if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type!=NUM&&tokens[i-1].type!=HEXNUM))){
@@ -272,11 +274,17 @@ void replaceToken() {
           break;
         }
       }
-    tokens[i].type = NUM;
+      tokens[i].type = NUM;
     }else if(tokens[i].type==SYMBOL){
-
+      bool success_find;
+      swaddr_t addr = findvar(tokens[i].str,&success_find);
+        if(!success_find){
+          return false;
+        }
+      sprintf(tokens[i].str,"%x",addr);
     }
   }
+  return true;
 }
 uint32_t eval(int p, int q, bool *success) {
     replaceToken();

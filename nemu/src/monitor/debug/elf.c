@@ -80,4 +80,14 @@ void load_elf_tables(int argc, char *argv[]) {
 
 	fclose(fp);
 }
-
+	swaddr_t findvar(char *varName,bool *success){
+      int loop;
+      for(loop=0;loop<nr_symtab_entry;loop++){
+        if(strcmp(strtab+symtab[loop].st_name,varName)==0){
+			*success=true;
+			return symtab[loop].st_value;
+        }
+      }
+	  *success=false;
+	  return 0;
+	}
