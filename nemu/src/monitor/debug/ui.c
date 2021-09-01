@@ -121,11 +121,11 @@ static int cmd_bt(char *args){
     swaddr_t ptrEIP=cpu.eip,ptrEBP=cpu.ebp;
     int no=0;
     while(ptrEBP){
-        printf("#%d %s with args:",no,findfunc(ptrEIP));
+        printf("#%d %s with ",no,findfunc(ptrEIP));
         ptrEIP=swaddr_read(ptrEBP+4,4);
         int i=0;
         for(;i<4;i++){
-            printf("%d",swaddr_read(ptrEBP+8+4*i,4));
+            printf("args%d: %d ",i,swaddr_read(ptrEBP+8+4*i,4));
         }
         printf("\n");
         no++;
