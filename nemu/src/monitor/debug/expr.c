@@ -30,7 +30,7 @@ static struct rule {
 	{"\\(", '('},					// left
   {"\\$[a-zA-Z]{2,3}",REG}, //register
   {"0[xX][0-9a-fA-F]+",HEXNUM},
-  {"[1-9][0-9]*",NUM}, //decimal number
+  {"0?[1-9][0-9]*",NUM}, //decimal number
 	{"\\)", ')'},					// right 
   {"!=",NEQ},
   {"&&",AND},
