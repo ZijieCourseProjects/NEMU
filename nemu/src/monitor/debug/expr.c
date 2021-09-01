@@ -282,6 +282,7 @@ bool replaceToken() {
           return false;
         }
       sprintf(tokens[i].str,"%x",addr);
+      tokens[i].type=HEXNUM;
     }
   }
   return true;
