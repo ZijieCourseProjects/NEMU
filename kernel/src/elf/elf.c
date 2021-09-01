@@ -30,16 +30,16 @@ uint32_t loader() {
 
 	elf = (void*)buf;
 
-	const uint32_t elf_magic = 0x7f454c46;
+	const uint32_t elf_magic = 0x464c457f;
 	uint32_t *p_magic = (void *)buf;
 	nemu_assert(*p_magic == elf_magic);
 
 	/* Load each program segment */
-	ph=(Elf32_Phdr *)((uint8_t)elf + elf->e_phoff);
-	Elf32_Phdr eph=ph+elf->e_phnum;
+	ph=(Elf32_Phdr *)((uint8_t*)elf + elf->e_phoff);
+	Elf32_Phdr *eph=ph+elf->e_phnum;
 	for(; ph<eph;ph++ ) {
 		if(ph->p_type == PT_LOAD) {
-			ramdisk_read((void *)ph->p_paddr,ph->p_offset,ph->p_filesz);
+			ramdisk_read((void*)ph->p_paddr,ph->p_offset,ph->p_filesz);
 
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
