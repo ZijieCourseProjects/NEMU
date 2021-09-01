@@ -1,5 +1,6 @@
 #include "monitor/monitor.h"
 #include "monitor/expr.h"
+#include "monitor/myelf.h"
 #include "monitor/watchpoint.h"
 #include "nemu.h"
 
@@ -115,6 +116,23 @@ static int cmd_d(char *args){
     free_wp(no);
     return 0;
 }
+
+static int cmd_bt(char *args){
+    swaddr_t ptrEIP=cpu.eip,ptrEBP=cpu.ebp;
+    int no=0;
+    while(ptrEBP){
+        printf("#%d %s with args:",no,findfunc(ptrEIP));
+        ptrEIP=swaddr_read(ptrEBP+4,4);
+        int i=0;
+        for(;i<4;i++){
+            printf("%d",swaddr_read(ptrEBP+8+4*i,4));
+        }
+        printf("\n");
+        no++;
+        ptrEBP=swaddr_read(ptrEBP,4);
+    }
+    return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -130,6 +148,7 @@ static struct {
     {"x", "scan the memory", cmd_scan},
     {"d","delete a watchpoint",cmd_d},
     {"w","add new watchpoint",cmd_wp},
+    {"bt","backtrace",cmd_bt},
     {"p","print something",cmd_p}
     /* TODO: Add more commands */
 
