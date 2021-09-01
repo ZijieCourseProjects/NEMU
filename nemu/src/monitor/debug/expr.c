@@ -334,7 +334,10 @@ bool replaceToken()
 }
 uint32_t eval(int p, int q, bool *success)
 {
-  replaceToken();
+  if(!replaceToken()){
+    *success=false;
+    return 0;
+  }
   if (p > q)
   {
     *success = false;
