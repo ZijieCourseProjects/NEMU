@@ -225,6 +225,7 @@ bool replaceToken()
       }
       sprintf(tokens[i].str, "%x", addr);
       tokens[i].type = HEXNUM;
+      i--;
     }
     else if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM)))
     {
