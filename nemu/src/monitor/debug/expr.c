@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM,HEXNUM,REG,NEQ,AND,OR,NOT,DEREF,NEG
+	NOTYPE = 256, EQ, NUM,HEXNUM,REG,NEQ,AND,OR,NOT,DEREF,NEG,SYMBOL
 
 	/* TODO: Add more token types */
 
@@ -36,6 +36,7 @@ static struct rule {
   {"&&",AND},
   {"\\|\\|",OR},
 	{"==", EQ},						// equal
+  {"[a-zA-Z0-9_]*",SYMBOL}, //symbol
   {"!",NOT}
 };
 
@@ -272,6 +273,8 @@ void replaceToken() {
         }
       }
     tokens[i].type = NUM;
+    }else if(tokens[i].type==SYMBOL){
+
     }
   }
 }
