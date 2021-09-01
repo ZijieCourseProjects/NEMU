@@ -390,37 +390,26 @@ uint32_t eval(int p, int q, bool *success)
     {
     case '+':
       return val1 + val2;
-      break;
     case '-':
       return val1 - val2;
-      break;
     case '*':
       return val1 * val2;
-      break;
     case '/':
       return val1 / val2;
-      break;
     case EQ:
       return val1 == val2;
-      break;
     case NEQ:
       return val1 != val2;
-      break;
     case AND:
       return val1 && val2;
-      break;
     case OR:
       return val1 || val2;
-      break;
     case NOT:
       return !val2;
-      break;
     case NEG:
       return -val2;
-      break;
     case DEREF:
       return swaddr_read(val2,4);
-      break;
     default:
       return val2;
     }
