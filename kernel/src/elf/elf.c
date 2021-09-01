@@ -36,8 +36,8 @@ uint32_t loader() {
 
 	/* Load each program segment */
 	ph=(Elf32_Phdr *)((uint8_t*)elf + elf->e_phoff);
-	Elf32_Phdr *eph=ph+elf->e_phnum;
-	for(; ph<eph;ph++ ) {
+	Elf32_Phdr *eph=(void*)ph+elf->e_phnum*elf->e_phentsize;
+	for(; ph<eph;ph+=elf->e_phentsize ) {
 		if(ph->p_type == PT_LOAD) {
 			ramdisk_read((void*)ph->p_paddr,ph->p_offset,ph->p_filesz);
 
