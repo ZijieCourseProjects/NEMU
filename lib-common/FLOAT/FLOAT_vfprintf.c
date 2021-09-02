@@ -58,7 +58,6 @@ static void modify_vfprintf()
 {
 	const int offset = 0x306;
 	void *ptCall = (void *)((uint32_t)&_vfprintf_internal + offset);
-	mprotect((void *)((uint32_t)(ptCall - 100) & (0xfffff000)), 4096 * 2, PROT_READ | PROT_WRITE | PROT_EXEC);
 	*(int32_t *)(ptCall + 1) += ((int32_t)&format_FLOAT - (int32_t)&_fpmaxtostr);
 	void *ptArg = ptCall - 0xa;
 	*(uint8_t *)(ptArg - 1) = 0x8;
