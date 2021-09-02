@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "FLOAT.h"
+#include <sys/mman.h>
 
 extern char _vfprintf_internal;
 extern char _fpmaxtostr;
 extern int __stdio_fwrite(char *buf, int len, FILE *stream);
 
-__attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f) {
+__attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f)
+{
 	/* TODO: Format a FLOAT argument `f' and write the formating
 	 * result to `stream'. Keep the precision of the formating
 	 * result with 6 by truncating. For example:
@@ -20,53 +22,16 @@ __attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f) {
 	return __stdio_fwrite(buf, len, stream);
 }
 
-static void modify_vfprintf() {
-	/* TODO: Implement this function to hijack the formating of "%f"
-	 * argument during the execution of `_vfprintf_internal'. Below
-	 * is the code section in _vfprintf_internal() relative to the
-	 * hijack.
-	 */
-
-#if 0
-	else if (ppfs->conv_num <= CONV_A) {  /* floating point */
-		ssize_t nf;
-		nf = _fpmaxtostr(stream,
-				(__fpmax_t)
-				(PRINT_INFO_FLAG_VAL(&(ppfs->info),is_long_double)
-				 ? *(long double *) *argptr
-				 : (long double) (* (double *) *argptr)),
-				&ppfs->info, FP_OUT );
-		if (nf < 0) {
-			return -1;
-		}
-		*count += nf;
-
-		return 0;
-	} else if (ppfs->conv_num <= CONV_S) {  /* wide char or string */
-#endif
-
-	/* You should modify the run-time binary to let the code above
-	 * call `format_FLOAT' defined in this source file, instead of
-	 * `_fpmaxtostr'. When this function returns, the action of the
-	 * code above should do the following:
-	 */
-
-#if 0
-	else if (ppfs->conv_num <= CONV_A) {  /* floating point */
-		ssize_t nf;
-		nf = format_FLOAT(stream, *(FLOAT *) *argptr);
-		if (nf < 0) {
-			return -1;
-		}
-		*count += nf;
-
-		return 0;
-	} else if (ppfs->conv_num <= CONV_S) {  /* wide char or string */
-#endif
-
+static void modify_vfprintf()
+{
+	const int offset = 0x306;
+	void *ptCall = (void *)((uint32_t)&_vfprintf_internal + offset);
+	mprotect((void *)((uint32_t)(ptCall - 100) & (0xfffff000)), 4096 * 2, PROT_READ | PROT_WRITE | PROT_EXEC);
+	*(int32_t *)(ptCall + 1) += ((int32_t)&format_FLOAT - (int32_t)&_fpmaxtostr);
 }
 
-static void modify_ppfs_setargs() {
+static void modify_ppfs_setargs()
+{
 	/* TODO: Implement this function to modify the action of preparing
 	 * "%f" arguments for _vfprintf_internal() in _ppfs_setargs().
 	 * Below is the code section in _vfprintf_internal() relative to
@@ -89,13 +54,13 @@ static void modify_ppfs_setargs() {
 
 	/* Flag bits that can be set in a type returned by `parse_printf_format'.  */
 	/* WARNING -- These differ in value from what glibc uses. */
-#define PA_FLAG_MASK		(0xff00)
-#define __PA_FLAG_CHAR		(0x0100) /* non-gnu -- to deal with hh */
-#define PA_FLAG_SHORT		(0x0200)
-#define PA_FLAG_LONG		(0x0400)
-#define PA_FLAG_LONG_LONG	(0x0800)
-#define PA_FLAG_LONG_DOUBLE	PA_FLAG_LONG_LONG
-#define PA_FLAG_PTR		(0x1000) /* TODO -- make dynamic??? */
+#define PA_FLAG_MASK (0xff00)
+#define __PA_FLAG_CHAR (0x0100) /* non-gnu -- to deal with hh */
+#define PA_FLAG_SHORT (0x0200)
+#define PA_FLAG_LONG (0x0400)
+#define PA_FLAG_LONG_LONG (0x0800)
+#define PA_FLAG_LONG_DOUBLE PA_FLAG_LONG_LONG
+#define PA_FLAG_PTR (0x1000) /* TODO -- make dynamic??? */
 
 	while (i < ppfs->num_data_args) {
 		switch(ppfs->argtype[i++]) {
@@ -164,10 +129,10 @@ static void modify_ppfs_setargs() {
 		++p;
 	}
 #endif
-
 }
 
-void init_FLOAT_vfprintf() {
+void init_FLOAT_vfprintf()
+{
 	modify_vfprintf();
 	modify_ppfs_setargs();
 }
