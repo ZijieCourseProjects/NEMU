@@ -40,7 +40,7 @@ __attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f)
 		30517,
 		15258,
 	};
-	int i, fruc;
+	int i, fruc=0;
 	for (i = 1; i <= 16; i++)
 	{
 		if ((f & 0xffff) & (1 << (16 - i)))
@@ -61,8 +61,8 @@ static void modify_vfprintf()
 	*(int32_t *)(ptCall + 1) += ((int32_t)&format_FLOAT - (int32_t)&_fpmaxtostr);
 	void *ptArg = ptCall - 0xa;
 	*(uint8_t *)(ptArg - 1) = 0x8;
-	*(uint8_t *)ptArg = 'R';
-	*(uint16_t *)(ptArg + 1) = 0x9090;
+	*(uint8_t *)ptArg = 0xff;
+	*(uint16_t *)(ptArg + 1) = 0x9032;
 	*(uint16_t *)(ptArg-0x14)=0x9090;
 	*(uint16_t *)(ptArg-0x18)=0x9090;
 }
