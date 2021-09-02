@@ -5,6 +5,7 @@
 
 extern char _vfprintf_internal;
 extern char _fpmaxtostr;
+extern char _ppfs_setargs;
 extern int __stdio_fwrite(char *buf, int len, FILE *stream);
 
 __attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f)
@@ -16,20 +17,40 @@ __attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f)
 	 *         0x00010000    "1.000000"
 	 *         0x00013333    "1.199996"
 	 */
-	char si = (f>>31) & 0x1?'-':'\0';
-	if(si)
-		f*=-1;
-	int intNum=f>>16;
-	int helper[]={0, 500000000, 250000000, 125000000, 62500000, 31250000, 15625000, 7812500, 3906250, 1953125, 976562, 488281, 244140, 122070, 61035, 30517, 15258, };
-	int i,fruc;
-	for(i=1;i<=16;i++){
-		if((f & 0xffff)& (1 << (16-i))){
-			fruc+=helper[i];
+	char si = (f >> 31) & 0x1 ? '-' : '\0';
+	if (si)
+		f *= -1;
+	int intNum = f >> 16;
+	int helper[] = {
+		0,
+		500000000,
+		250000000,
+		125000000,
+		62500000,
+		31250000,
+		15625000,
+		7812500,
+		3906250,
+		1953125,
+		976562,
+		488281,
+		244140,
+		122070,
+		61035,
+		30517,
+		15258,
+	};
+	int i, fruc;
+	for (i = 1; i <= 16; i++)
+	{
+		if ((f & 0xffff) & (1 << (16 - i)))
+		{
+			fruc += helper[i];
 		}
 	}
-	fruc/=1000;
+	fruc /= 1000;
 	char buf[80];
-	int len = sprintf(buf, "%c%d.%06u", si,intNum,fruc);
+	int len = sprintf(buf, "%c%d.%06u", si, intNum, fruc);
 	return __stdio_fwrite(buf, len, stream);
 }
 
@@ -39,10 +60,12 @@ static void modify_vfprintf()
 	void *ptCall = (void *)((uint32_t)&_vfprintf_internal + offset);
 	mprotect((void *)((uint32_t)(ptCall - 100) & (0xfffff000)), 4096 * 2, PROT_READ | PROT_WRITE | PROT_EXEC);
 	*(int32_t *)(ptCall + 1) += ((int32_t)&format_FLOAT - (int32_t)&_fpmaxtostr);
-	void *ptArg=ptCall - 0xa;
-	*(uint8_t *)(ptArg-1)=0x8;
-	*(uint8_t *)ptArg='R';
-	*(uint16_t *)(ptArg+1)=0;
+	void *ptArg = ptCall - 0xa;
+	*(uint8_t *)(ptArg - 1) = 0x8;
+	*(uint8_t *)ptArg = 'R';
+	*(uint16_t *)(ptArg + 1) = 0x9090;
+	*(uint16_t *)(ptArg-0x14)=0x9090;
+	*(uint16_t *)(ptArg-0x18)=0x9090;
 }
 
 static void modify_ppfs_setargs()
@@ -52,6 +75,12 @@ static void modify_ppfs_setargs()
 	 * Below is the code section in _vfprintf_internal() relative to
 	 * the modification.
 	 */
+	void *ptrfunc=&_ppfs_setargs;
+	void *ptrDouble = ptrfunc + 0x71;
+	const int toJmp=0x32;
+	const int offset=0x2f;
+	*(int8_t *)ptrDouble=0xEB;
+	*(int8_t *)(ptrDouble+1)=offset;
 
 #if 0
 	enum {                          /* C type: */
