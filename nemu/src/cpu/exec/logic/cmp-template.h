@@ -23,7 +23,7 @@ make_helper(concat(cmp_eax_,SUFFIX)){
 	DATA_TYPE result = REG(R_EAX) - b ;
   cpu.eflags.CF = result > REG(R_EAX);
   cpu.eflags.OF = MSB((REG(R_EAX) ^ b) & (REG(R_EAX) ^ result));
-	print_asm_template2();
+	print_asm_template1();
 	return 1+DATA_BYTE;
 }
 #include "cpu/exec/template-end.h"
