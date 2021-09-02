@@ -76,7 +76,6 @@ static void modify_ppfs_setargs()
 	 */
 	void *ptrfunc=&_ppfs_setargs;
 	void *ptrDouble = ptrfunc + 0x71;
-	const int toJmp=0x32;
 	const int offset=0x2f;
 	*(int8_t *)ptrDouble=0xEB;
 	*(int8_t *)(ptrDouble+1)=offset;
