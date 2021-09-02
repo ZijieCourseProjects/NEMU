@@ -28,6 +28,10 @@ static void modify_vfprintf()
 	void *ptCall = (void *)((uint32_t)&_vfprintf_internal + offset);
 	mprotect((void *)((uint32_t)(ptCall - 100) & (0xfffff000)), 4096 * 2, PROT_READ | PROT_WRITE | PROT_EXEC);
 	*(int32_t *)(ptCall + 1) += ((int32_t)&format_FLOAT - (int32_t)&_fpmaxtostr);
+	void *ptArg=ptCall - 0xa;
+	*(uint8_t *)(ptArg-1)=0x8;
+	*(uint8_t *)ptArg='R';
+	*(uint16_t *)(ptArg+1)=0;
 }
 
 static void modify_ppfs_setargs()
