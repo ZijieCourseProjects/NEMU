@@ -77,7 +77,7 @@ static void modify_ppfs_setargs()
 	void *ptrfunc=&_ppfs_setargs;
 	void *ptrDouble = ptrfunc + 0x71;
 	const int offset=0x30;
-	*(int8_t *)ptrDouble=0xE9;
+	*(int8_t *)ptrDouble=0xEb;
 	*(int8_t *)(ptrDouble+1)=offset;
 
 #if 0
