@@ -1,4 +1,5 @@
 #include "nemu.h"
+#include "monitor/myelf.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -6,81 +7,102 @@
 #include <sys/types.h>
 #include <regex.h>
 
-enum {
-	NOTYPE = 256, EQ, NUM,HEXNUM,REG,NEQ,AND,OR,NOT,DEREF,NEG
+enum
+{
+  NOTYPE = 256,
+  EQ,
+  NUM,
+  HEXNUM,
+  REG,
+  NEQ,
+  AND,
+  OR,
+  NOT,
+  DEREF,
+  NEG,
+  SYMBOL
 
-	/* TODO: Add more token types */
+  /* TODO: Add more token types */
 
 };
 
-static struct rule {
-	char *regex;
-	int token_type;
+static struct rule
+{
+  char *regex;
+  int token_type;
 } rules[] = {
 
-	/* TODO: Add more rules.
+    /* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
 
-	{" +",	NOTYPE},				// spaces
-	{"\\+", '+'},					// plus
-	{"-", '-'},					// sub
-	{"\\*", '*'},					// multi
-	{"/", '/'},					// devide
-	{"\\(", '('},					// left
-  {"\\$[a-zA-Z]{2,3}",REG}, //register
-  {"0[xX][0-9a-fA-F]+",HEXNUM},
-  {"[1-9][0-9]*",NUM}, //decimal number
-	{"\\)", ')'},					// right 
-  {"!=",NEQ},
-  {"&&",AND},
-  {"\\|\\|",OR},
-	{"==", EQ},						// equal
-  {"!",NOT}
-};
+    {" +", NOTYPE},            // spaces
+    {"\\+", '+'},              // plus
+    {"-", '-'},                // sub
+    {"\\*", '*'},              // multi
+    {"/", '/'},                // devide
+    {"\\(", '('},              // left
+    {"\\$[a-zA-Z]{2,3}", REG}, //register
+    {"0[xX][0-9a-fA-F]+", HEXNUM},
+    {"0|[1-9][0-9]*", NUM}, //decimal number
+    {"\\)", ')'},           // right
+    {"!=", NEQ},
+    {"&&", AND},
+    {"\\|\\|", OR},
+    {"==", EQ},                // equal
+    {"[a-zA-Z0-9_]*", SYMBOL}, //symbol
+    {"!", NOT}};
 
-#define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
+#define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
 
 static regex_t re[NR_REGEX];
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
  */
-void init_regex() {
-	int i;
-	char error_msg[128];
-	int ret;
+void init_regex()
+{
+  int i;
+  char error_msg[128];
+  int ret;
 
-	for(i = 0; i < NR_REGEX; i ++) {
-		ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
-		if(ret != 0) {
-			regerror(ret, &re[i], error_msg, 128);
-			Assert(ret == 0, "regex compilation failed: %s\n%s", error_msg, rules[i].regex);
-		}
-	}
+  for (i = 0; i < NR_REGEX; i++)
+  {
+    ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
+    if (ret != 0)
+    {
+      regerror(ret, &re[i], error_msg, 128);
+      Assert(ret == 0, "regex compilation failed: %s\n%s", error_msg, rules[i].regex);
+    }
+  }
 }
 
-typedef struct token {
-	int type;
-	char str[32];
+typedef struct token
+{
+  int type;
+  char str[32];
 } Token;
 
 Token tokens[32];
 int nr_token;
-int tokenCount=0;
-static bool make_token(char *e) {
-tokenCount=0;
+int tokenCount = 0;
+static bool make_token(char *e)
+{
+  tokenCount = 0;
   int position = 0;
   int i;
   regmatch_t pmatch;
 
   nr_token = 0;
 
-  while (e[position] != '\0') {
+  while (e[position] != '\0')
+  {
     /* Try all rules one by one. */
-    for (i = 0; i < NR_REGEX; i++) {
+    for (i = 0; i < NR_REGEX; i++)
+    {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 &&
-          pmatch.rm_so == 0) {
+          pmatch.rm_so == 0)
+      {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
@@ -92,9 +114,10 @@ tokenCount=0;
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        if(tokenCount>31)
-            assert(0);
-        switch (rules[i].token_type) {
+        if (tokenCount > 31)
+          assert(0);
+        switch (rules[i].token_type)
+        {
         case '+':
         case '(':
         case ')':
@@ -106,46 +129,58 @@ tokenCount=0;
         case NEQ:
         case '/':
         case EQ:
-            tokens[tokenCount++].type=rules[i].token_type;
-            break;
+          tokens[tokenCount++].type = rules[i].token_type;
+          break;
         case NUM:
         case HEXNUM:
         case REG:
-            tokens[tokenCount].type=rules[i].token_type;
-            strncpy(tokens[tokenCount++].str, substr_start, substr_len);
-            break;
+        case SYMBOL:
+          tokens[tokenCount].type = rules[i].token_type;
+          strncpy(tokens[tokenCount++].str, substr_start, substr_len);
+          break;
         }
         break;
-			}
-		}
+      }
+    }
 
-		if(i == NR_REGEX) {
-			printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
-			return false;
-		}
-	}
-	return true;
+    if (i == NR_REGEX)
+    {
+      printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
+      return false;
+    }
+  }
+  return true;
 }
 
-bool checkParentheses(int p, int q,bool *success) {
+bool checkParentheses(int p, int q, bool *success)
+{
   int stk = 0, i = 0;
-  for (i = p; i <= q; i++) {
-    if (tokens[i].type == '(') {
+  for (i = p; i <= q; i++)
+  {
+    if (tokens[i].type == '(')
+    {
       stk++;
-    } else if (tokens[i].type == ')') {
+    }
+    else if (tokens[i].type == ')')
+    {
       stk--;
-      if (stk == 0) {
-        if (tokens[p].type=='(' && i== q) {
+      if (stk == 0)
+      {
+        if (tokens[p].type == '(' && i == q)
+        {
           return 1;
-        }else{
-            return 0;
+        }
+        else
+        {
+          return 0;
         }
       }
     }
   }
-  if(stk!=0){
-      *success=false;
-      return false;
+  if (stk != 0)
+  {
+    *success = false;
+    return false;
   }
   return false;
 }
@@ -166,27 +201,45 @@ bool checkParentheses(int p, int q,bool *success) {
 //  }
 //  return num;
 //
-uint32_t strNum(char * str,int type){
-    int ret;
-    if(type==HEXNUM)
-        sscanf(str,"%x",&ret);
-    if(type==NUM)
-        sscanf(str,"%d",&ret);
-    return ret;
+uint32_t strNum(char *str, int type)
+{
+  int ret;
+  if (type == HEXNUM)
+    sscanf(str, "%x", &ret);
+  if (type == NUM)
+    sscanf(str, "%d", &ret);
+  return ret;
 }
-void replaceToken() {
+bool replaceToken()
+{
   int i = 0;
-  for (; i < tokenCount; i++) {
-      if(tokens[i].type=='*'&&(i==0||(tokens[i-1].type!=NUM&&tokens[i-1].type!=HEXNUM))){
-        uint32_t data=swaddr_read(strNum(tokens[i+1].str, tokens[i+1].type), 4);
-        tokens[i].type=DEREF;
-        tokens[i+1].type=HEXNUM;
-        sprintf(tokens[i+1].str,"%x",data);
-      }else if(tokens[i].type=='-'&&(tokens[i-1].type=='('||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type=='*'||tokens[i-1].type=='/')){
-          tokens[i].type=NEG;
-      }else if (tokens[i].type == REG) {
-      if (strlen(tokens[i].str) == 4) {
-        switch (tokens[i].str[2]) {
+  for(;i<tokenCount;i++){
+    if(tokens[i].type==SYMBOL){
+      bool success_find;
+      swaddr_t addr = findvar(tokens[i].str,&success_find);
+        if(!success_find){
+          return false;
+        }
+      sprintf(tokens[i].str,"%x",addr);
+      tokens[i].type=HEXNUM;
+    }
+  }
+  for (i=0; i < tokenCount; i++)
+  {
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM)))
+    {
+      tokens[i].type = DEREF;
+    }
+    else if (tokens[i].type == '-' && (tokens[i - 1].type == '(' || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' || tokens[i - 1].type == '*' || tokens[i - 1].type == '/'))
+    {
+      tokens[i].type = NEG;
+    }
+    else if (tokens[i].type == REG)
+    {
+      if (strlen(tokens[i].str) == 4)
+      {
+        switch (tokens[i].str[2])
+        {
         case 'A':
         case 'a':
           sprintf(tokens[i].str, "%d", cpu.gpr[0]._32);
@@ -218,26 +271,29 @@ void replaceToken() {
           break;
         case 'I':
         case 'i':
-          sprintf(tokens[i].str, "%d",cpu.eip);
+          sprintf(tokens[i].str, "%d", cpu.eip);
         }
-      } else if (strlen(tokens[i].str) == 3){
-        switch (tokens[i].str[1]) {
+      }
+      else if (strlen(tokens[i].str) == 3)
+      {
+        switch (tokens[i].str[1])
+        {
         case 'A':
         case 'a':
           if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
             sprintf(tokens[i].str, "%d", cpu.gpr[0]._16);
-           if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+          if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
             sprintf(tokens[i].str, "%d", cpu.gpr[0]._8[0]);
-            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+          if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
             sprintf(tokens[i].str, "%d", cpu.gpr[0]._8[1]);
           break;
         case 'c':
         case 'C':
-           if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
+          if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
             sprintf(tokens[i].str, "%d", cpu.gpr[1]._16);
-           if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+          if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
             sprintf(tokens[i].str, "%d", cpu.gpr[1]._8[0]);
-            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+          if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
             sprintf(tokens[i].str, "%d", cpu.gpr[1]._8[1]);
           break;
         case 'd':
@@ -246,20 +302,20 @@ void replaceToken() {
             sprintf(tokens[i].str, "%d", cpu.gpr[2]._16);
           if (tokens[i].str[2] == 'i' || tokens[i].str[2] == 'I')
             sprintf(tokens[i].str, "%d", cpu.gpr[7]._16);
-            if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+          if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
             sprintf(tokens[i].str, "%d", cpu.gpr[2]._8[0]);
-            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+          if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
             sprintf(tokens[i].str, "%d", cpu.gpr[2]._8[1]);
-         break;
+          break;
         case 'B':
         case 'b':
           if (tokens[i].str[2] == 'x' || tokens[i].str[2] == 'X')
             sprintf(tokens[i].str, "%d", cpu.gpr[3]._16);
           if (tokens[i].str[2] == 'p' || tokens[i].str[2] == 'P')
             sprintf(tokens[i].str, "%d", cpu.gpr[5]._16);
-             if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
+          if (tokens[i].str[2] == 'l' || tokens[i].str[2] == 'L')
             sprintf(tokens[i].str, "%d", cpu.gpr[3]._8[0]);
-            if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
+          if (tokens[i].str[2] == 'h' || tokens[i].str[2] == 'H')
             sprintf(tokens[i].str, "%d", cpu.gpr[3]._8[1]);
           break;
         case 'S':
@@ -271,101 +327,112 @@ void replaceToken() {
           break;
         }
       }
-    tokens[i].type = NUM;
+      tokens[i].type = NUM;
     }
   }
+  return true;
 }
-uint32_t eval(int p, int q, bool *success) {
-    replaceToken();
-  if (p > q) {
+uint32_t eval(int p, int q, bool *success)
+{
+  if(!replaceToken()){
+    *success=false;
+    return 0;
+  }
+  if (p > q)
+  {
     *success = false;
     return 0;
-  } else if (p == q) {
-    return strNum(tokens[p].str,tokens[p].type);
-  }else if (checkParentheses(p, q, success) == true) {
+  }
+  else if (p == q)
+  {
+    return strNum(tokens[p].str, tokens[p].type);
+  }
+  else if (checkParentheses(p, q, success) == true)
+  {
     return eval(p + 1, q - 1, success);
-  } else {
-    if (*success == false) {
+  }
+  else
+  {
+    if (*success == false)
+    {
       Log("Invalid operation");
       return 0;
     }
     int i = p;
     char op = 0;
-    for (; i < q; i++) {
-        if(tokens[i].type=='('){
-            int count=0;
-            do{
-                if(tokens[i].type=='(')
-                    count++;
-                else if(tokens[i].type==')')
-                    count--;
-                i++;
-            }while(count);
-        }
-        if(i>=q)
-            break;
-        if((op==0 || tokens[(int)op].type=='*' || tokens[(int)op].type=='/')&& (tokens[i].type=='*'||tokens[i].type =='/'))
-            op=i;
-        if(tokens[i].type=='+'||tokens[i].type=='-')
-            op=i;
-        if(tokens[i].type==NOT||tokens[i].type==EQ||tokens[i].type==NEQ||tokens[i].type==AND||tokens[i].type==OR)
-            op=i;
-       }
-    if(p+1==q&&(tokens[p].type==NEG||tokens[p].type==DEREF))
-        op=p;
-    int val1=0;
-    if(p!=op)
-        val1=eval(p, op - 1, success);
+    for (; i < q; i++)
+    {
+      if (tokens[i].type == '(')
+      {
+        int count = 0;
+        do
+        {
+          if (tokens[i].type == '(')
+            count++;
+          else if (tokens[i].type == ')')
+            count--;
+          i++;
+        } while (count);
+      }
+      if (i >= q)
+        break;
+      if ((op == 0 || tokens[(int)op].type == '*' || tokens[(int)op].type == '/') && (tokens[i].type == '*' || tokens[i].type == '/'))
+        op = i;
+      if (tokens[i].type == '+' || tokens[i].type == '-')
+        op = i;
+      if (tokens[i].type == NOT || tokens[i].type == EQ || tokens[i].type == NEQ || tokens[i].type == AND || tokens[i].type == OR)
+        op = i;
+    }
+    if (p + 1 == q && (tokens[p].type == NEG || tokens[p].type == DEREF))
+      op = p;
+    int val1 = 0;
+    if (p != op)
+      val1 = eval(p, op - 1, success);
     int val2 = eval(op + 1, q, success);
-    switch (tokens[(int)op].type) {
+    switch (tokens[(int)op].type)
+    {
     case '+':
       return val1 + val2;
-      break;
     case '-':
       return val1 - val2;
-      break;
     case '*':
       return val1 * val2;
-      break;
     case '/':
       return val1 / val2;
-      break;
     case EQ:
-      return val1==val2;
-      break;
+      return val1 == val2;
     case NEQ:
-      return val1!=val2;
-      break;
+      return val1 != val2;
     case AND:
-      return val1&&val2;
-      break;
+      return val1 && val2;
     case OR:
-      return val1||val2;
-      break;
+      return val1 || val2;
     case NOT:
       return !val2;
-      break;
     case NEG:
       return -val2;
-      break;
     case DEREF:
+      return swaddr_read(val2,4);
     default:
       return val2;
     }
   }
 }
 
-uint32_t expr(char *e, bool *success) {
-  if (!make_token(e)) {
+uint32_t expr(char *e, bool *success)
+{
+  if (!make_token(e))
+  {
     *success = false;
     return 0;
   }
-  
-  int ans=eval(0, tokenCount-1, success);
-  int i=0;
-  for (; i < 32; ++i) {
-      tokens[i].type=0;
-      memset(tokens[i].str,0,32);
+
+  int ans = eval(0, tokenCount - 1, success);
+  int i = 0;
+  for (; i < 32; ++i)
+  {
+    tokens[i].type = 0;
+    memset(tokens[i].str, 0, 32);
   }
   return ans;
   /* TODO: Insert codes to evaluate the expression. */

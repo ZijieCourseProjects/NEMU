@@ -1,0 +1,9 @@
+#ifndef __JBE_H__
+#define __JBE_H__
+
+make_helper(jbe_si_b);
+make_helper(jbe_r_v);
+make_helper(jbe_i_v);
+
+
+#endif

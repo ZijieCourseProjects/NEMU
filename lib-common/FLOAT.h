@@ -4,25 +4,26 @@
 #include "trap.h"
 
 typedef int FLOAT;
+#define ll long long
+#define sign_bit(res) (res >> 31) & 1
+#define int_no_sign(sign) (sign ? -1 : 1)
+#define int_sign(sign) int_no_sign(sign)
+#define test() printf("\n")
 
 static inline int F2int(FLOAT a) {
-	nemu_assert(0);
-	return 0;
+	return a >> 16;
 }
 
 static inline FLOAT int2F(int a) {
-	nemu_assert(0);
-	return 0;
+	return a << 16;
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
-	nemu_assert(0);
-	return 0;
+	return (a * b);
 }
 
 static inline FLOAT F_div_int(FLOAT a, int b) {
-	nemu_assert(0);
-	return 0;
+	return (a / b);
 }
 
 FLOAT f2F(float);
