@@ -3,6 +3,11 @@ typedef struct CacheLine
     uint8_t data[CACHE_BLOCK_SIZE];
     uint32_t tag;
     bool valid;
+    #ifdef DIRTY
+        bool dirty;
+    #endif
+
+        
 } CacheLine;
 
 typedef struct Cache
