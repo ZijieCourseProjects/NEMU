@@ -50,7 +50,12 @@ __attribute__((used)) static int format_FLOAT(FILE *stream, FLOAT f)
 	}
 	fruc /= 1000;
 	char buf[80];
-	int len = sprintf(buf, "%c%d.%06u", si, intNum, fruc);
+	int len;
+	if(!si){
+		len = sprintf(buf,"%d.%06u",intNum,fruc);
+	}else{
+		len = sprintf(buf, "%c%d.%06u", si, intNum, fruc);
+	}	
 	return __stdio_fwrite(buf, len, stream);
 }
 
