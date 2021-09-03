@@ -10,17 +10,17 @@
 enum
 {
   NOTYPE = 256,
-  EQ,
-  NUM,
-  HEXNUM,
-  REG,
-  NEQ,
-  AND,
-  OR,
-  NOT,
-  DEREF,
-  NEG,
-  SYMBOL
+  EQ,    //257
+  NUM,   //258
+  HEXNUM,//259
+  REG,  //260
+  NEQ,  //261
+  AND,  //262
+  OR,   //263
+  NOT, //264
+  DEREF, //265
+  NEG, //266
+  SYMBOL //267
 
   /* TODO: Add more token types */
 
@@ -226,11 +226,11 @@ bool replaceToken()
   }
   for (i=0; i < tokenCount; i++)
   {
-    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM)))
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != NUM && tokens[i - 1].type != HEXNUM && tokens[i-1].type!=')')))
     {
       tokens[i].type = DEREF;
     }
-    else if (tokens[i].type == '-' && (tokens[i - 1].type == '(' || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' || tokens[i - 1].type == '*' || tokens[i - 1].type == '/'))
+    else if (tokens[i].type == '-' && (i==0 ||tokens[i - 1].type == '(' || tokens[i - 1].type == '+' || tokens[i - 1].type == '-' || tokens[i - 1].type == '*' || tokens[i - 1].type == '/' ))
     {
       tokens[i].type = NEG;
     }
@@ -376,15 +376,15 @@ uint32_t eval(int p, int q, bool *success)
       }
       if (i >= q)
         break;
-      if ((op == 0 || tokens[(int)op].type == '*' || tokens[(int)op].type == '/') && (tokens[i].type == '*' || tokens[i].type == '/'))
+      if ((op == 0) && (tokens[i].type == NEG || tokens[i].type == DEREF))
         op = i;
-      if (tokens[i].type == '+' || tokens[i].type == '-')
+      if ((op == 0 || tokens[(int)op].type == '*' || tokens[(int)op].type == '/') && (tokens[i].type == '*' || tokens[i].type == '/'))
         op = i;
       if (tokens[i].type == NOT || tokens[i].type == EQ || tokens[i].type == NEQ || tokens[i].type == AND || tokens[i].type == OR)
         op = i;
+      if (tokens[i].type == '+' || tokens[i].type == '-')
+        op = i;
     }
-    if (p + 1 == q && (tokens[p].type == NEG || tokens[p].type == DEREF))
-      op = p;
     int val1 = 0;
     if (p != op)
       val1 = eval(p, op - 1, success);
