@@ -61,7 +61,7 @@ void initCache(){
 
 static int read_cache_hit(hwaddr_t addr,Cache *this,uint32_t *groupStart,uint32_t *tag){
     uint32_t groupIndex = (addr >> this->blockBit) & (this->groupSize -1);
-    *tag = (addr >> (this->groupSize+this->blockBit));
+    *tag = (addr >> (this->groupBit+this->blockBit));
 
     int i;
     *groupStart=groupIndex*this->waySize;
