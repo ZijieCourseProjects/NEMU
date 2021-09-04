@@ -120,7 +120,7 @@ int read_cacheL2(hwaddr_t addr){
 
 void write_cacheL1(hwaddr_t addr,size_t len,uint32_t data){
     uint32_t group_idx = (addr >> cacheL1.blockBit) & (cacheL1.groupSize - 1);
-    uint32_t tag = (addr >> (cacheL1.groupSize + cacheL1.blockBit));
+    uint32_t tag = (addr >> (cacheL1.groupBit + cacheL1.blockBit));
     uint32_t offset = addr & (cacheL1.blockSize - 1);
 
     int i,group = group_idx * cacheL1.waySize;
