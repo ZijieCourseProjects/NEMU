@@ -1,4 +1,6 @@
 #include "common.h"
+#include "memory/cache.h"
+#include "burst.h"
 
 uint32_t dram_read(hwaddr_t, size_t);
 void dram_write(hwaddr_t, size_t, uint32_t);
@@ -6,7 +8,21 @@ void dram_write(hwaddr_t, size_t, uint32_t);
 /* Memory accessing interfaces */
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
-	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+	//return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+	int l1_1st_line = read_cacheL1(addr);
+	uint32_t offset = addr & (cacheL1.blockSize - 1);
+	uint8_t ret[BURST_LEN << 1];
+	if (offset + len > cacheL1.blockSize){
+		int l1_2nd_line = read_cacheL1(addr + cacheL1.blockSize - offset);
+		memcpy(ret,cacheL1.lines[l1_1st_line].data + offset,cacheL1.blockSize - offset);
+		memcpy(ret + cacheL1.blockSize - offset,cacheL1.lines[l1_2nd_line].data,len - (cacheL1.blockSize - offset));
+	}else {
+		memcpy(ret,cacheL1.lines[l1_1st_line].data + offset,len);
+	}
+
+	int tmp = 0;
+	uint32_t ans = unalign_rw(ret + tmp, 4) & (~0u >> ((4 - len) << 3));
+	return ans;
 }
 
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {

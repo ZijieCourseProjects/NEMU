@@ -1,3 +1,6 @@
+#ifndef __CACHE__
+#define __CACHE__
+
 typedef struct CacheLine
 {
     uint32_t tag;
@@ -24,3 +27,6 @@ int read_cacheL1(hwaddr_t addr);
 int read_cacheL2(hwaddr_t addr);
 void write_cacheL2(hwaddr_t addr, size_t len, uint32_t data);
 void write_cacheL1(hwaddr_t addr,size_t len,uint32_t data);
+extern struct Cache cacheL2;
+extern struct Cache cacheL1;
+#endif
