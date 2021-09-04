@@ -1,31 +1,5 @@
 #include "macro.h"
-typedef struct CacheLine
-{
-    uint8_t data[CACHE_BLOCK_SIZE];
-    uint32_t tag;
-    bool valid;
-    #ifdef DIRTY
-        bool dirty;
-    #endif
-
-        
-} CacheLine;
-
-typedef struct Cache
-{
-    int blockSize;
-    int size;
-    int blockBit;
-    int groupBit;
-    int wayBit;
-    int groupSize;
-    int waySize;
-    CacheLine lines[CACHE_SIZE/CACHE_BLOCK_SIZE];
-
-    void (* init)(struct Cache *this);
-} Cache;
-
-
+#include <stdlib.h>
 
 void concat(init_,CACHENAME)(struct Cache *this){
     int i=0;
@@ -36,11 +10,13 @@ void concat(init_,CACHENAME)(struct Cache *this){
     this->blockBit=CACHE_BLOCK_BIT;
     this->groupSize=(1 << CACHE_GROUP_BIT);
     this->waySize=(1<<CACHE_WAY_BIT);
+    this->lines=malloc(sizeof(CacheLine)*(CACHE_SIZE/CACHE_BLOCK_SIZE));
 
     for(;i<CACHE_SIZE/CACHE_BLOCK_SIZE;i++){
         (this->lines[i]).valid=false;
+        (this->lines[i]).data=malloc(sizeof(uint8_t)*CACHE_BLOCK_SIZE);
         #ifdef DIRTY
-            this->lines[i].ditry=false; 
+            this->lines[i].dirty=false; 
         #endif
     }
 }
