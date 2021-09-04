@@ -2,17 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define CACHENAME cacheL1
 #define CACHE_BLOCK_SIZE 64
 #define CACHE_SIZE 64*1024
 
 #include "memory/cache.h"
 
-void init(Cache *this,int numOfLines){
-    int i=0;
-    for(;i<numOfLines;i++){
-        (this->lines[i]).valid=false;
-        #ifdef DIRTY
-            *this->lines[i].ditry=false; 
-        #endif
-    }
+Cache cacheL1;
+
+
+#undef CACHENAME
+#undef CACHE_BLOCK_SIZE
+#undef CACHE_SIZE
+
+void initCache(){
+    cacheL1.init=init_cacheL1;
+    cacheL1.init(&cacheL1);
 }
