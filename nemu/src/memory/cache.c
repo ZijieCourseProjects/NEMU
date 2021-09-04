@@ -117,3 +117,53 @@ int read_cacheL2(hwaddr_t addr){
     cacheL2.lines[i].tag=tag;
     return i;
 }
+
+void write_cacheL1(hwaddr_t addr,size_t len,uint32_t data){
+    uint32_t group_idx = (addr >> cacheL1.blockBit) & (cacheL1.groupSize - 1);
+    uint32_t tag = (addr >> (cacheL1.groupSize + cacheL1.blockBit));
+    uint32_t offset = addr & (cacheL1.blockSize - 1);
+
+    int i,group = group_idx * cacheL1.waySize;
+    for (i = group + 0;i < group + cacheL1.waySize;i ++){
+        if (cacheL1.lines[i].valid == 1 && cacheL1.lines[i].tag == tag){// WRITE HIT
+            /*write through*/
+            if (offset + len > cacheL1.blockSize){
+                dram_write(addr,cacheL1.blockSize - offset,data);
+                memcpy(cacheL1.lines[i].data + offset, &data, cacheL1.blockSize - offset);
+                /*Update Cache2*/
+                write_cacheL2(addr,cacheL1.blockSize - offset,data);
+
+                write_cacheL1(addr + cacheL1.blockSize - offset,len - (cacheL1.blockSize - offset),data >>(8*(cacheL1.blockSize - offset)));
+            }else {
+                dram_write(addr,len,data);
+                memcpy(cacheL1.lines[i].data + offset, &data, len);
+                /*Update Cache2*/
+                write_cacheL2(addr,len,data);
+            }
+            return;
+        }
+    }
+    write_cacheL2(addr,len,data);
+}
+void write_cacheL2(hwaddr_t addr, size_t len, uint32_t data){
+    uint32_t group_idx = (addr >> cacheL2.blockBit) & (cacheL2.groupSize - 1);
+    uint32_t tag = (addr >> (cacheL2.groupBit+ cacheL2.blockBit));
+    uint32_t offset = addr & (cacheL2.blockSize - 1);
+
+    int i,group = group_idx * cacheL2.waySize;
+    for (i = group + 0;i < group + cacheL2.waySize;i ++){
+        if (cacheL2.lines[i].valid == 1 && cacheL2.lines[i].tag == tag){// WRITE HIT
+            cacheL2.lines[i].dirty = 1;
+            if (offset + len > cacheL2.blockSize){
+                memcpy(cacheL2.lines[i].data + offset, &data, cacheL2.blockSize- offset);
+                write_cacheL2(addr + cacheL2.blockSize- offset,len - (cacheL2.blockSize- offset),data >> (8*(cacheL2.blockSize- offset)));
+            }else {
+                memcpy(cacheL2.lines[i].data + offset, &data, len);
+            }
+            return;
+        }
+    }
+    i = read_cacheL2(addr);
+    cacheL2.lines[i].dirty = 1;
+    memcpy(cacheL2.lines[i].data + offset,&data,len);
+}
