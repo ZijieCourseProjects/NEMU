@@ -16,7 +16,7 @@ PP_TARGET := $(PP_FILES:.c=.i)
 .PHONY: $(PP_TARGET)
 
 $(PP_TARGET): %.i: %.c
-	$(call make_command, $(CC), -E -I$(nemu_INC_DIR), cc -E $<, $<)
+	$(call make_command, $(CC), -E -I$(nemu_INC_DIR) -I$(LIB_COMMON_DIR), cc -E $<, $<)
 
 cpp: $(PP_TARGET)
 

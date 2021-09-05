@@ -99,4 +99,6 @@ void restart()
 	initCache();
 	/* Initialize DRAM. */
 	init_ddr3();
+	/* Initialize CR0 register */
+	cpu.cr0.val=0;
 }

@@ -12,6 +12,7 @@
 #include "data-mov/push.h"
 #include "data-mov/pop.h"
 #include "data-mov/setne.h"
+#include "data-mov/lgdt.h"
 #include "data-mov/sete.h"
 
 #include "arith/adc.h"
