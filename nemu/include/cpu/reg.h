@@ -5,6 +5,12 @@
 #include "cpu.h"
 #include "mmu.h"
 
+enum{
+	S_SS=0,
+	S_DS,
+	S_CS,
+	S_ES
+};
 enum
 {
 	R_EAX,
@@ -102,7 +108,7 @@ typedef struct
 	} eflags;
 
 	/* segment register */
-	segmentRegister cs,ds,es,ss;
+	segmentRegister segReg[4];
 	CR0 cr0;
 	GDTR gdtr;
 } CPU_state;
