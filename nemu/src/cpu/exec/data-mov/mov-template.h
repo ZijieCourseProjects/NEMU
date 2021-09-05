@@ -28,4 +28,19 @@ make_helper(concat(mov_moffs2a_, SUFFIX)) {
 	return 5;
 }
 
+#if DATA_BYTE == 4
+	make_helper(mov_r2cr){
+		int len=decode_rm2r_l(eip+1);
+		cpu.cr0.val=op_src->val;	
+		print_asm_template2();
+		return 1+len;
+	}
+
+	make_helper(mov_cr2r){
+		int len=decode_rm2r_l(eip+1);
+		OPERAND_W(op_src,cpu.cr0.val);
+		print_asm_template2();
+		return 1+len;
+	}
+#endif
 #include "cpu/exec/template-end.h"
