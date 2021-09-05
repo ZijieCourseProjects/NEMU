@@ -87,7 +87,7 @@ static int cmd_scan(char *args){
     if(length <=0)
         printf("invalid length\n");
     for(step=0;step<length;step++)
-        printf("%08x:[%08x]\n",addrToScan+4*step,swaddr_read(addrToScan+4*step, 4));
+        printf("%08x:[%08x]\n",addrToScan+4*step,swaddr_read(addrToScan+4*step, 4,S_DS));
     return 0;
 }
 
@@ -122,14 +122,14 @@ static int cmd_bt(char *args){
     int no=0;
     while(ptrEBP){
         printf("#%d %s with ",no,findfunc(ptrEIP));
-        ptrEIP=swaddr_read(ptrEBP+4,4);
+        ptrEIP=swaddr_read(ptrEBP+4,4,S_SS);
         int i=0;
         for(;i<4;i++){
-            printf("args%d: %d in DEC and %x in HEX ||",i,swaddr_read(ptrEBP+8+4*i,4),swaddr_read(ptrEBP+8+4*i,4));
+            printf("args%d: %d in DEC and %x in HEX ||",i,swaddr_read(ptrEBP+8+4*i,4,S_SS),swaddr_read(ptrEBP+8+4*i,4,S_SS));
         }
         printf("\n");
         no++;
-        ptrEBP=swaddr_read(ptrEBP,4);
+        ptrEBP=swaddr_read(ptrEBP,4,S_SS);
     }
     return 0;
 }

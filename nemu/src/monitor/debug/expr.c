@@ -412,7 +412,7 @@ uint32_t eval(int p, int q, bool *success)
     case NEG:
       return -val2;
     case DEREF:
-      return swaddr_read(val2,4);
+      return swaddr_read(val2,4,S_DS);
     default:
       return val2;
     }
