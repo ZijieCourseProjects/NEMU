@@ -6,10 +6,10 @@
 #include "mmu.h"
 
 enum{
-	S_SS=0,
-	S_DS,
+	S_ES=0,
 	S_CS,
-	S_ES
+	S_SS,
+	S_DS
 };
 enum
 {
