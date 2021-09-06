@@ -101,4 +101,10 @@ void restart()
 	init_ddr3();
 	/* Initialize CR0 register */
 	cpu.cr0.val=0;
+    /*Initialize ss register */
+    cpu.segReg[S_SS].invisiblePart.base_31_24=0;
+    cpu.segReg[S_SS].invisiblePart.base_23_16=0;
+    cpu.segReg[S_SS].invisiblePart.base_15_0=0;
+    cpu.segReg[S_SS].invisiblePart.limit_19_16=0xf;
+    cpu.segReg[S_SS].invisiblePart.limit_15_0=0xffff;
 }
