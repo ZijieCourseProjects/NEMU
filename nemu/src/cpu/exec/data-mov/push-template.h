@@ -4,7 +4,7 @@
 
 static void do_execute(){
     cpu.esp-=(ops_decoded.is_operand_size_16?2:4);
-    MEM_W(cpu.esp, op_src->val);
+    MEM_W(cpu.esp, op_src->val,S_SS);
     print_asm_template1();
 }
 

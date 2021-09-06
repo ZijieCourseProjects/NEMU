@@ -4,14 +4,14 @@
 
 static void do_execute()
 {
-    cpu.gdtr.limit = swaddr_read(op_src->addr, 2);
+    cpu.gdtr.limit = lnaddr_read(op_src->addr, 2);
     if (op_src->size == 2)
     {
-        cpu.gdtr.baseAddr = swaddr_read(op_src->addr + 2, 3);
+        cpu.gdtr.baseAddr = lnaddr_read(op_src->addr + 2, 3);
     }
     else if (op_src->size == 4)
     {
-        cpu.gdtr.baseAddr = swaddr_read(op_src->addr + 2, 4);
+        cpu.gdtr.baseAddr = lnaddr_read(op_src->addr + 2, 4);
     }
 
     print_asm_template1();

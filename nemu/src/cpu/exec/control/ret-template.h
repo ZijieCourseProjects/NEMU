@@ -2,10 +2,10 @@
 
 make_helper(ret){
     if(ops_decoded.is_operand_size_16){
-        cpu.eip=MEM_R(cpu.esp)&0x0000FFFF;
+        cpu.eip=MEM_R(cpu.esp,S_SS)&0x0000FFFF;
         cpu.esp+=2;
     }else{
-        cpu.eip=MEM_R(cpu.esp);
+        cpu.eip=MEM_R(cpu.esp,S_SS);
         cpu.esp+=4;
     }
     print_asm("ret");
@@ -13,7 +13,7 @@ make_helper(ret){
 }
 make_helper(ret_imm){
     int16_t imm=instr_fetch(eip+1, 2);
-    cpu.eip=MEM_R(cpu.esp);
+    cpu.eip=MEM_R(cpu.esp,S_SS);
     cpu.esp+=4;
     Log("%x",cpu.eip);
     Log("%d",imm);
