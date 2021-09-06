@@ -83,11 +83,11 @@ make_group(group5,
 	jmp_rm_l, inv, push_rm_v, inv)
 
 make_group(group6,
-	inv, inv, lgdt_rm_v, inv,
+	inv, inv, inv, inv,
 	inv, inv, inv, inv)
 
 make_group(group7,
-	inv, inv, inv, inv,
+	inv, inv, lgdt_rm_v, inv,
 	inv, inv, inv, inv)
 
 
