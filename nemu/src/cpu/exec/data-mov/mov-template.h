@@ -28,6 +28,27 @@ make_helper(concat(mov_moffs2a_, SUFFIX)) {
 	return 5;
 }
 
+#if DATA_BYTE==2
+static void seg_load(uint8_t segNo){
+    uint16_t  DesIndex = (cpu.segReg[segNo].visiblePart>>3)&0x1FFF;
+    uint32_t low= lnaddr_read(cpu.gdtr.baseAddr+8*DesIndex,4);
+    uint32_t high= lnaddr_read(cpu.gdtr.baseAddr+8*DesIndex+4,4);
+    cpu.segReg[segNo].invisiblePart.base_15_0=low&0xFFFF0000;
+    cpu.segReg[segNo].invisiblePart.base_23_16=high&0xFF;
+    cpu.segReg[segNo].invisiblePart.base_31_24=high&0xFF000000;
+    cpu.segReg[segNo].invisiblePart.limit_15_0=low&0x0000FFFF;
+    cpu.segReg[segNo].invisiblePart.limit_19_16=high&0xF0000;
+}
+
+make_helper(mov_rm2sreg){
+    uint8_t modrm= instr_fetch(eip+1,1);
+    uint8_t sreg_no=(modrm>>3)&0x7;
+    uint8_t srcreg=(modrm&0x7);
+    cpu.segReg[sreg_no].visiblePart= REG(srcreg);
+    seg_load(sreg_no);
+    return 2;
+}
+#endif
 #if DATA_BYTE == 4
 	make_helper(mov_r2cr){
 		int len=decode_rm2r_l(eip+1);
