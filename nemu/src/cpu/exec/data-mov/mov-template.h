@@ -33,11 +33,11 @@ static void seg_load(uint8_t segNo){
     uint16_t  DesIndex = (cpu.segReg[segNo].visiblePart>>3)&0x1FFF;
     uint32_t low= lnaddr_read(cpu.gdtr.baseAddr+8*DesIndex,4);
     uint32_t high= lnaddr_read(cpu.gdtr.baseAddr+8*DesIndex+4,4);
-    cpu.segReg[segNo].invisiblePart.base_15_0=low&0xFFFF0000;
+    cpu.segReg[segNo].invisiblePart.base_15_0=(low&0xFFFF0000) >> 16;
     cpu.segReg[segNo].invisiblePart.base_23_16=high&0xFF;
-    cpu.segReg[segNo].invisiblePart.base_31_24=high&0xFF000000;
+    cpu.segReg[segNo].invisiblePart.base_31_24=(high&0xFF000000) >> 24;
     cpu.segReg[segNo].invisiblePart.limit_15_0=low&0x0000FFFF;
-    cpu.segReg[segNo].invisiblePart.limit_19_16=high&0xF0000;
+    cpu.segReg[segNo].invisiblePart.limit_19_16=(high&0xF0000) >> 16;
 }
 
 make_helper(mov_rm2sreg){
