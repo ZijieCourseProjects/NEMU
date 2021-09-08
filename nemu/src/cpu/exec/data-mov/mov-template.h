@@ -52,14 +52,22 @@ make_helper(mov_rm2sreg){
 #if DATA_BYTE == 4
 	make_helper(mov_r2cr){
 		int len=decode_rm2r_l(eip+1);
-		cpu.cr0.val=op_src->val;	
+		if(op_dest->reg==0){
+		  cpu.cr0.val=op_src->val;
+		}else if(op_dest->reg==3){
+		  cpu.cr3.val=op_src->val;
+		}
 		print_asm_template2();
 		return 1+len;
 	}
 
 	make_helper(mov_cr2r){
 		int len=decode_rm2r_l(eip+1);
-		OPERAND_W(op_src,cpu.cr0.val);
+		if(op_dest->reg==0){
+		  OPERAND_W(op_src,cpu.cr0.val);
+		}else if(op_dest->reg==3){
+		  OPERAND_W(op_src,cpu.cr3.val);
+		}
 		print_asm_template2();
 		return 1+len;
 	}

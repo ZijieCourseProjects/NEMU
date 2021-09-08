@@ -110,6 +110,7 @@ typedef struct
 	/* segment register */
 	segmentRegister segReg[4];
 	CR0 cr0;
+	CR3 cr3;
 	GDTR gdtr;
 } CPU_state;
 

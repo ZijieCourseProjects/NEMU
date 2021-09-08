@@ -64,5 +64,7 @@
 #include "string/lods.h"
 
 #include "misc/misc.h"
+#include "misc/std.h"
+#include "misc/cld.h"
 
 #include "special/special.h"
