@@ -1,4 +1,5 @@
 #include "burst.h"
+#include "memory/tlb.h"
 #include "common.h"
 #include "cpu/reg.h"
 #include "memory/cache.h"
@@ -17,8 +18,12 @@ hwaddr_t page_translate(lnaddr_t addr, size_t len) {
   uint32_t offset = (addr & 0xfff);
   uint32_t pageIndex = (addr >> 12) & 0x3ff;
   uint32_t dirIndex = (addr >> 22) & 0x3ff;
-
   assert(offset + len - 1 <= 0xfff);
+  /*read tlb*/
+  uint32_t tlb_ans = read_tlb((addr>>12)&0xFFFFF);
+  if(tlb_ans!=-1){
+	return (tlb_ans<<12)+offset;
+  }
   /* find Page table address*/
   union PageDirectoryEntry pageTable;
   pageTable.val = hwaddr_read((cpu.cr3.page_directory_base << 12) + dirIndex * sizeof(union PageDirectoryEntry),
@@ -30,6 +35,8 @@ hwaddr_t page_translate(lnaddr_t addr, size_t len) {
   pageFrame.val = hwaddr_read((pageTable.page_frame << 12) + pageIndex * sizeof(union PageTableEntry),
 							  sizeof(union PageTableEntry));
   assert(pageFrame.present == 1);
+  /*update tlb*/
+  update_tlb((addr >> 12)&0xFFFFF,pageFrame.page_frame);
 
   return (pageFrame.page_frame << 12) + offset;
 }
