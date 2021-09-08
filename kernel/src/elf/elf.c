@@ -39,7 +39,8 @@ uint32_t loader() {
 	Elf32_Phdr *eph=ph+elf->e_phnum;
 	for(; ph<eph;ph++ ) {
 		if(ph->p_type == PT_LOAD) {
-			ramdisk_read((void*)ph->p_paddr,ph->p_offset,ph->p_filesz);
+		  ph->p_paddr=mm_malloc(ph->p_vaddr,ph->p_memsz);
+			ramdisk_read((void*)(ph->p_paddr),ph->p_offset,ph->p_filesz);
 
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
