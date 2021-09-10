@@ -9,8 +9,6 @@ static void do_execute(){
 	}else{
         cpu.esp-=DATA_BYTE;
         swaddr_write(cpu.esp,4,cpu.eip+5,S_SS);
-		swaddr_read(cpu.esp,4,S_SS);
-		swaddr_write(cpu.esp,4,cpu.eip+5,S_SS);
 	}
         cpu.eip+=op_src->val;
     print_asm_template1();
