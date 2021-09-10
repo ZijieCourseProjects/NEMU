@@ -30,7 +30,7 @@ make_helper(concat(mov_moffs2a_, SUFFIX)) {
 }
 
 #if DATA_BYTE==2
-static void seg_load(uint8_t segNo){
+void seg_load(uint8_t segNo){
     uint16_t  DesIndex = (cpu.segReg[segNo].visiblePart>>3)&0x1FFF;
     uint32_t low= lnaddr_read(cpu.gdtr.baseAddr+8*DesIndex,4);
     uint32_t high= lnaddr_read(cpu.gdtr.baseAddr+8*DesIndex+4,4);

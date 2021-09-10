@@ -27,6 +27,10 @@
 #include "arith/sbb.h"
 #include "arith/sub.h"
 
+#include "intr/int.h"
+#include "intr/iret.h"
+#include "intr/cli.h"
+
 #include "control/jmp.h"
 #include "control/jns.h"
 #include "control/call.h"
