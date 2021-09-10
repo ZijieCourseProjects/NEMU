@@ -1,8 +1,7 @@
 #include "prefix/prefix.h"
 
 #include "data-mov/mov.h"
-#include "data-mov/cmovne.h"
-#include "data-mov/cmov.h"
+#include "data-mov/cmovcc.h"
 #include "data-mov/xchg.h"
 #include "data-mov/movext.h"
 #include "data-mov/movsx.h"
@@ -13,6 +12,7 @@
 #include "data-mov/pop.h"
 #include "data-mov/setne.h"
 #include "data-mov/lgdt.h"
+#include "data-mov/lidt.h"
 #include "data-mov/sete.h"
 
 #include "arith/adc.h"

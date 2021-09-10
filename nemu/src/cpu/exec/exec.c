@@ -87,7 +87,7 @@ make_group(group6,
 	inv, inv, inv, inv)
 
 make_group(group7,
-	inv, inv, lgdt_rm_v, inv,
+	inv, inv, lgdt_rm_v, lidt_rm_v,
 	inv, inv, inv, inv)
 
 
@@ -178,7 +178,7 @@ helper_fun _2byte_opcode_table [256] = {
 /* 0x38 */	inv, inv, inv, inv,
 /* 0x3c */	inv, inv, inv, inv,
 /* 0x40 */	inv, inv, inv, inv,
-/* 0x44 */	cmov_rm2r_v, cmovne_r2rm_v, inv, inv,
+/* 0x44 */  cmove_v, cmovne_v, inv, inv,
 /* 0x48 */	inv, inv, inv, inv,
 /* 0x4c */	inv, inv, inv, inv,
 /* 0x50 */	inv, inv, inv, inv,

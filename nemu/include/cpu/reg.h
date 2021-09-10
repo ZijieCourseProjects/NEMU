@@ -64,6 +64,11 @@ typedef struct
 	uint16_t limit;
 }GDTR;
 
+typedef struct{
+  uint32_t baseAddr;
+  uint16_t limit;
+}IDTR;
+
 
 typedef struct
 {
@@ -112,6 +117,7 @@ typedef struct
 	CR0 cr0;
 	CR3 cr3;
 	GDTR gdtr;
+	IDTR idtr;
 } CPU_state;
 
 extern CPU_state cpu;
