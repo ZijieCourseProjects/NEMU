@@ -5,11 +5,13 @@
 static void do_execute(){
     if(ops_decoded.is_operand_size_16){
         cpu.esp-=DATA_BYTE;
-        MEM_W(cpu.esp,cpu.eip+DATA_BYTE+1,S_SS);
-    }else{
+		swaddr_write(cpu.esp,2,cpu.eip+2+1,S_SS);
+	}else{
         cpu.esp-=DATA_BYTE;
-        MEM_W(cpu.esp, cpu.eip+DATA_BYTE+1,S_SS);
-    }
+        swaddr_write(cpu.esp,4,cpu.eip+5,S_SS);
+		swaddr_read(cpu.esp,4,S_SS);
+		swaddr_write(cpu.esp,4,cpu.eip+5,S_SS);
+	}
         cpu.eip+=op_src->val;
     print_asm_template1();
 }
