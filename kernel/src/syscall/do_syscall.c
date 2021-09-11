@@ -19,7 +19,7 @@ static void sys_write(TrapFrame *tf){
   //asm volatile (".byte 0xd6" : : "a"(2),"c"(tf->ecx),"d"(tf->edx));
   uint32_t fd = tf -> ebx;
 
-  char* buf = (char*) tf -> ecx;
+  char* buf = (char*) (tf -> ecx);
 
   uint32_t len = tf -> edx;
   if (fd == 1 || fd == 2){

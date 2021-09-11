@@ -47,9 +47,9 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
   // return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
 
   /*whether a disk read or io read*/
-  size_t ionum = is_mmio(addr);
+  int ionum = is_mmio(addr);
   if (ionum != -1) {
-	return mmio_read(addr, ionum, len);
+	return mmio_read(addr, len, ionum);
   }
   int l1_1st_line = read_cacheL1(addr);
   uint32_t offset = addr & (cacheL1.blockSize - 1);
@@ -71,9 +71,9 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
   /*whether an io write or disk write*/
-  size_t ioNum= is_mmio(addr);
+  int ioNum= is_mmio(addr);
   if(ioNum!=-1){
-	return mmio_write(addr,ioNum,data,len);
+	return mmio_write(addr,len,data,ioNum);
   }
   write_cacheL1(addr, len, data);
   // dram_write(addr, len, data);

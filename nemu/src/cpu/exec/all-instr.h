@@ -32,6 +32,7 @@
 #include "intr/int.h"
 #include "intr/iret.h"
 #include "intr/cli.h"
+#include "intr/sti.h"
 
 #include "io/in.h"
 #include "io/hlt.h"
