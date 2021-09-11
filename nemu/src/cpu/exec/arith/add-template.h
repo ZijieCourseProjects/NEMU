@@ -19,8 +19,10 @@ make_instr_helper(si2rm)
 #endif
 make_instr_helper(r2rm)
 make_instr_helper(rm2r)
+make_instr_helper(i2a)
 
-#if DATA_BYTE == 2
+/*
+#if DATA_TYPEATA_BYTE == 2
   make_helper(add_eax){
     int32_t simm =instr_fetch(eip+1,4);
     DATA_TYPE result = cpu.eax+simm;
@@ -34,6 +36,7 @@ make_instr_helper(rm2r)
     return 5;
   }
 #endif
+*/
 
 
 
