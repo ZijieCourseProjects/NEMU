@@ -14,6 +14,7 @@
 #include "data-mov/lgdt.h"
 #include "data-mov/lidt.h"
 #include "data-mov/sete.h"
+#include "data-mov/setcc.h"
 #include "data-mov/popa.h"
 #include "data-mov/pusha.h"
 
