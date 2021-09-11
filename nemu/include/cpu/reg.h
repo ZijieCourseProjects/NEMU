@@ -118,6 +118,7 @@ typedef struct
 	CR3 cr3;
 	GDTR gdtr;
 	IDTR idtr;
+	bool INTR;
 } CPU_state;
 
 extern CPU_state cpu;

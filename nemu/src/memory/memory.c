@@ -3,6 +3,7 @@
 #include "common.h"
 #include "cpu/reg.h"
 #include "memory/cache.h"
+#include "device/mmio.h"
 
 void dram_write(hwaddr_t, size_t, uint32_t);
 uint32_t hwaddr_read(hwaddr_t addr, size_t len);
@@ -20,9 +21,9 @@ hwaddr_t page_translate(lnaddr_t addr, size_t len) {
   uint32_t dirIndex = (addr >> 22) & 0x3ff;
   assert(offset + len - 1 <= 0xfff);
   /*read tlb*/
-  uint32_t tlb_ans = read_tlb((addr>>12)&0xFFFFF);
-  if(tlb_ans!=-1){
-	return (tlb_ans<<12)+offset;
+  uint32_t tlb_ans = read_tlb((addr >> 12) & 0xFFFFF);
+  if (tlb_ans != -1) {
+	return (tlb_ans << 12) + offset;
   }
   /* find Page table address*/
   union PageDirectoryEntry pageTable;
@@ -36,7 +37,7 @@ hwaddr_t page_translate(lnaddr_t addr, size_t len) {
 							  sizeof(union PageTableEntry));
   assert(pageFrame.present == 1);
   /*update tlb*/
-  update_tlb((addr >> 12)&0xFFFFF,pageFrame.page_frame);
+  update_tlb((addr >> 12) & 0xFFFFF, pageFrame.page_frame);
 
   return (pageFrame.page_frame << 12) + offset;
 }
@@ -44,6 +45,12 @@ hwaddr_t page_translate(lnaddr_t addr, size_t len) {
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
   // return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+
+  /*whether a disk read or io read*/
+  size_t ionum = is_mmio(addr);
+  if (ionum != -1) {
+	return mmio_read(addr, ionum, len);
+  }
   int l1_1st_line = read_cacheL1(addr);
   uint32_t offset = addr & (cacheL1.blockSize - 1);
   uint8_t ret[BURST_LEN << 1];
@@ -63,6 +70,11 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 }
 
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
+  /*whether an io write or disk write*/
+  size_t ioNum= is_mmio(addr);
+  if(ioNum!=-1){
+	return mmio_write(addr,ioNum,data,len);
+  }
   write_cacheL1(addr, len, data);
   // dram_write(addr, len, data);
 }

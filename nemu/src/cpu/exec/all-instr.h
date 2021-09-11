@@ -33,6 +33,11 @@
 #include "intr/iret.h"
 #include "intr/cli.h"
 
+#include "io/in.h"
+#include "io/hlt.h"
+#include "io/out.h"
+
+
 #include "control/jmp.h"
 #include "control/jns.h"
 #include "control/call.h"
