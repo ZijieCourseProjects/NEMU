@@ -34,7 +34,7 @@ make_helper(nemu_trap) {
 	  for (i = 0; i < cpu.edx; i++) {
 		buf[i] = swaddr_read(cpu.ecx + i, 1, S_DS);
 	  }
-	  buf[i + 1] = 0;
+	  buf[i] = 0;
 	  printf("%s", buf);
 	  break;
 
