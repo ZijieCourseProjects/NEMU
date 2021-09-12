@@ -29,12 +29,19 @@ hwaddr_t page_translate(lnaddr_t addr, size_t len) {
   union PageDirectoryEntry pageTable;
   pageTable.val = hwaddr_read((cpu.cr3.page_directory_base << 12) + dirIndex * sizeof(union PageDirectoryEntry),
 							  sizeof(union PageDirectoryEntry));
+  if(pageTable.present !=1){
+	Log("%x",cpu.eip);
+  }
   assert(pageTable.present == 1);
 
   /* find Page frame address*/
   union PageTableEntry pageFrame;
   pageFrame.val = hwaddr_read((pageTable.page_frame << 12) + pageIndex * sizeof(union PageTableEntry),
 							  sizeof(union PageTableEntry));
+
+  if(pageFrame.present !=1){
+	Log("%x",cpu.eip);
+  }
   assert(pageFrame.present == 1);
   /*update tlb*/
   update_tlb((addr >> 12) & 0xFFFFF, pageFrame.page_frame);

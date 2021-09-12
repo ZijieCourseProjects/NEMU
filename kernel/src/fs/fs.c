@@ -1,6 +1,6 @@
 #include "common.h"
 #include <sys/ioctl.h>
-
+#include "string.h"
 typedef struct {
 	char *name;
 	uint32_t size;
@@ -26,7 +26,15 @@ static const file_info file_table[] __attribute__((used)) = {
 	{"word.dat", 5650, 28155717},
 };
 
+typedef struct {
+  bool opened;
+  uint32_t offset;
+} Fstate;
+
+
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
+
+Fstate fileState[NR_FILES +3];
 
 int fs_ioctl(int fd, uint32_t request, void *p) {
 	assert(request == TCGETS);
@@ -35,6 +43,75 @@ int fs_ioctl(int fd, uint32_t request, void *p) {
 
 void ide_read(uint8_t *, uint32_t, uint32_t);
 void ide_write(uint8_t *, uint32_t, uint32_t);
+void serial_printc(char);
 
 /* TODO: implement a simplified file system here. */
 
+int fs_open(const char *pathname, int flags){
+  int i;
+  for(i = 0; i < NR_FILES; i++){
+	if (strcmp(pathname, file_table[i].name) == 0){
+	  fileState[i + 3].opened = true;
+	  fileState[i + 3].offset = 0;
+	  return i + 3;
+	}
+  }
+  assert(0);
+  return -1;
+}
+
+int fs_read(int fd, void *buf, int len){
+  assert(fd > 2);
+  assert(fileState[fd].opened);
+  int id = fd - 3;
+  if(fileState[fd].offset >= file_table[id].size) return 0;
+  int l = len;
+  if(fileState[id].offset + l >= file_table[id].size){
+	l = file_table[id].size - fileState[fd].offset;
+  }
+  if (l == 0) return 0;
+  memset(buf + l, 0, len - l);
+  ide_read(buf, file_table[id].disk_offset + fileState[fd].offset, l);
+  fileState[fd].offset += l;
+  return l;
+}
+
+int fs_close(int fd){
+  assert(fd < NR_FILES + 3);
+  fileState[fd].opened = false;
+  fileState[fd].offset = 0;
+  return 0;
+}
+
+int fs_lseek(int fd, int offset, int whence){
+  switch (whence){
+	case SEEK_SET: {
+	  fileState[fd].offset = offset;
+	  return offset;
+	}
+	case SEEK_CUR: {
+	  fileState[fd].offset += offset;
+	  return fileState[fd].offset;
+	}
+	case SEEK_END: {
+	  fileState[fd].offset = file_table[fd - 3].size + offset;
+	  return fileState[fd].offset;
+	}
+  }
+  return -1;
+}
+
+int fs_write(int fd,void *buf,int len){
+  if(fd==2 || fd==1){
+	int i;
+	char *b = (char*)buf;
+	for(i = 0; i < len; i++){
+	  serial_printc(*(b));
+	  ++b;
+	}
+	return len;
+  }
+  ide_write(buf,file_table[fd-3].disk_offset+fileState[fd].offset,len);
+  fileState[fd].offset+=len;
+  return len;
+}

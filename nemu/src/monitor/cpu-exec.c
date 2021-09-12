@@ -88,10 +88,12 @@ void cpu_exec(volatile uint32_t n) {
            nemu_state=STOP;
        } 
        ptr=ptr->next;
-     } 
-    if(nemu_state==STOP)
-       return;
-     
+     }
+
+    if(nemu_state==2){
+	  return;
+	}
+
 
 
 #ifdef HAS_DEVICE
