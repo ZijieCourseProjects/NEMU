@@ -56,7 +56,6 @@ int fs_open(const char *pathname, int flags){
 	  return i + 3;
 	}
   }
-  assert(0);
   return -1;
 }
 

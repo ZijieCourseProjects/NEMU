@@ -2,14 +2,12 @@
 
 #define instr lods
 
+make_helper(concat(lods_, SUFFIX)) {
+	REG(R_EAX) = MEM_R(cpu.esi,S_DS);
+	cpu.esi += (cpu.eflags.DF ? -DATA_BYTE : DATA_BYTE);
 
-make_helper(concat(lods_m_, SUFFIX)){
-    REG(R_EAX) = MEM_R(cpu.esi,S_DS);
-    int incDec = cpu.eflags.DF ? -DATA_BYTE : DATA_BYTE;
-    cpu.esi = cpu.esi + incDec;
-    print_asm_template2();
-
-    return 1;
+	print_asm("lods" str(SUFFIX) " %%ds:(%%esi),%%%s", REG_NAME(R_EAX));
+	return 1;
 }
 
 #include "cpu/exec/template-end.h"

@@ -1,39 +1,5 @@
 #include "cpu/exec/template-start.h"
 
-#ifndef __CONDITION__
-#define __CONDITION__
-static inline bool check_cc_e(){
-  return cpu.eflags.ZF;
-}
-
-static inline bool check_cc_ne(){
-  return !cpu.eflags.ZF;
-}
-static inline bool check_cc_be(){
-  return cpu.eflags.CF || cpu.eflags.ZF;
-}
-
-static inline bool check_cc_le(){
-  return cpu.eflags.ZF || (cpu.eflags.SF ^ cpu.eflags.OF);
-}
-
-static inline bool check_cc_a(){
-  return (!cpu.eflags.CF) &&(!cpu.eflags.ZF);
-}
-
-static inline bool check_cc_s(){
-  return cpu.eflags.SF;
-}
-
-static inline bool check_cc_ns(){
-  return !cpu.eflags.SF;
-}
-
-static inline bool check_cc_g(){
-  return !cpu.eflags.ZF && (cpu.eflags.SF==cpu.eflags.OF);
-}
-#endif
-
 #define make_cmovcc_helper(cc) \
 	make_helper(concat4(cmov, cc, _, SUFFIX)) { \
 		int len = concat(decode_rm2r_, SUFFIX)(eip + 1); \
@@ -42,20 +8,20 @@ static inline bool check_cc_g(){
 		return len + 1; \
 	}
 
-//make_cmovcc_helper(o)
-//make_cmovcc_helper(no)
-//make_cmovcc_helper(b)
-//make_cmovcc_helper(ae)
+make_cmovcc_helper(o)
+make_cmovcc_helper(no)
+make_cmovcc_helper(b)
+make_cmovcc_helper(ae)
 make_cmovcc_helper(e)
 make_cmovcc_helper(ne)
 make_cmovcc_helper(be)
 make_cmovcc_helper(a)
 make_cmovcc_helper(s)
 make_cmovcc_helper(ns)
-//make_cmovcc_helper(p)
-//make_cmovcc_helper(np)
-//make_cmovcc_helper(l)
-//make_cmovcc_helper(ge)
+make_cmovcc_helper(p)
+make_cmovcc_helper(np)
+make_cmovcc_helper(l)
+make_cmovcc_helper(ge)
 make_cmovcc_helper(le)
 make_cmovcc_helper(g)
 
