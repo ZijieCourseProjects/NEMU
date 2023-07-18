@@ -1,6 +1,5 @@
 # ICS2021 Programming Assignment
 
-## 有部分代码来自前人的工作 感谢学长学姐们的无私付出 抄作业给个star吧😘
 This project is the programming assignment of the class ICS(Introduction to Computer System) in College of Intelligence and Computing, Tianjin Univerisity.
 
 This project is introduced from Nanjin University in 2016. Thank you for  Prof. Chunfeng Yuan of NJU and Dr. Zihao Yu of ICT.
